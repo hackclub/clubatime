@@ -29,3 +29,6 @@ export const auth = betterAuth({
 		sveltekitCookies(getRequestEvent),
 	],
 });
+
+export type ServerSession = typeof auth.$Infer.Session.session;
+export type ServerUser = typeof auth.$Infer.Session.user;

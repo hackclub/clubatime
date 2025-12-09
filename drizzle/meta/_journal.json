@@ -8,6 +8,13 @@
 			"when": 1765134508212,
 			"tag": "0000_sharp_maggott",
 			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1765284854640,
+			"tag": "0001_pink_annihilus",
+			"breakpoints": true
 		}
 	]
 }

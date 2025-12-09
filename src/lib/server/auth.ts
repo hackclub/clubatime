@@ -10,9 +10,6 @@ export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
 	}),
-	emailAndPassword: {
-		enabled: false,
-	},
 	plugins: [
 		genericOAuth({
 			config: [
@@ -28,6 +25,12 @@ export const auth = betterAuth({
 		}),
 		sveltekitCookies(getRequestEvent),
 	],
+	session: {
+		cookieCache: {
+			enabled: true,
+			maxAge: 5 * 60, // 5 minutes (maxAge is in seconds)
+		},
+	},
 });
 
 export type ServerSession = typeof auth.$Infer.Session.session;

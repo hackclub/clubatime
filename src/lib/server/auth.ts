@@ -11,6 +11,9 @@ export const auth = betterAuth({
 		provider: "pg",
 	}),
 	baseURL: env.BETTER_AUTH_URL,
+	experimental: {
+		joins: true,
+	},
 	plugins: [
 		genericOAuth({
 			config: [

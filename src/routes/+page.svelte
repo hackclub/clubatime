@@ -1,35 +1,22 @@
 <script lang="ts">
-import { authClient } from "$lib/auth";
-
-async function signIn() {
-	await authClient.signIn.oauth2({
-		providerId: "hackclub",
-		callbackURL: "/",
-		errorCallbackURL: "/error-page",
-		scopes: ["openid", "profile", "email", "name", "verification_status"],
-	});
-}
-
-// TODO: change this into a page data thing or query, Since we want everything to work without JS
-// Signing in will happen through a form button/query
-const session = authClient.useSession();
+import { getSession, signIn, signOut } from "$lib/auth.remote";
 </script>
 
 <div>
-  {#if $session.data}
+  {#if await getSession()}
     <div>
       <p>
-        {$session.data.user.name}
+        {(await getSession())?.user.name}
       </p>
-      <button
-        onclick={async () => {
-          await authClient.signOut();
-        }}
-      >
-        Sign Out
-      </button>
+      <form {...signOut}>
+        <button>
+            Sign Out
+        </button>
+      </form>
     </div>
   {:else}
-    <button onclick={signIn}>Sign in with HCA</button>
+    <form {...signIn}>
+        <button>Sign in with HCA</button>
+    </form>
   {/if}
 </div>

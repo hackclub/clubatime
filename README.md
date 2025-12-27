@@ -2,7 +2,36 @@
 
 ## Developing
 
+### Regular install
 Install deps with `pnpm install`. Create a `.env` file and copy the contents of `.env.example` into it. Then, fill in the values.
+
+### Nix/devenv install
+
+This project uses <https://devenv.sh> for easy access to a dev environment. You can install [lix](https://lix.systems) (A better fork of nix with a nicer installer) like so:
+```sh
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+```
+
+...then install `devenv`
+```sh
+nix-env --install --attr devenv -f https://github.com/NixOS/nixpkgs/tarball/nixpkgs-unstable
+```
+
+(If you're on NixOS, just add `devenv` to your packages/home-manager list)
+
+And then enter the development shell with `devenv shell` (or, if you have [direnv](https://direnv.net/docs/installation.html) installed, you can use it instead)
+
+### Running the project
+
+If you want to startup the builtin postgres database with devenv, you can run
+```
+devenv up
+```
+
+The .env.example file has the URL for the default local postgres database.
+
+
+To start the sveltekit/vite development server:
 
 ```sh
 pnpm run dev

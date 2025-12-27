@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { getSession, signIn, signOut } from "$lib/auth.remote";
+import { getSession, signIn, signOut } from "$lib/auth.remote";
 
-    const session = await getSession();
+const session = await getSession();
 </script>
 
 <nav>

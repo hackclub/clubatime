@@ -1,0 +1,336 @@
+## User
+
+[@SvelteKit clubatime frontend setup](zed:///agent/thread/86fec56d-ca1b-434f-9e88-41467bbce25b?name=SvelteKit+clubatime+frontend+setup)
+what is stoiryboard
+
+## Assistant
+
+Based on the conversation summary you shared, I don't see any mention of "storyboard" in that context. It's possible you might be thinking of one of these:
+
+1. **Airtable** - The database/spreadsheet service being used as the source-of-truth for organizers in the Clubatime project.
+
+2. **Sidebar** - One of the UI components discussed (`src/lib/components/Sidebar.svelte`) for navigation in the SvelteKit frontend.
+
+3. Something from a different conversation or context that wasn't included here.
+
+Could you clarify what you're asking about? Are you:
+- Asking about a design/UX storyboarding process for the Clubatime project?
+- Referring to something specific in the codebase?
+- Thinking of a different term from the conversation?
+
+Let me know and I can help you out!
+
+## User
+
+storybook srry
+
+## Assistant
+
+Ah, **Storybook**! That makes sense.
+
+**Storybook** is a popular open-source tool for developing and testing UI components in isolation. Here's what it does:
+
+## What Storybook Does
+
+1. **Component Sandbox** - Lets you build and view UI components outside of your main app, one at a time
+2. **Documentation** - Auto-generates a visual catalog of all your components with their different states/variants
+3. **Interactive Testing** - You can tweak props, test different states (loading, error, empty, etc.), and see how components behave
+4. **Visual Regression Testing** - Can integrate with tools to catch unintended visual changes
+
+## Example Use Case for Clubatime
+
+You could use Storybook to develop components like:
+- `Navbar.svelte` - signed in vs signed out states
+- `Sidebar.svelte` - leader view vs admin view vs regular user
+- Submit form - empty, filled, validation errors, submitting state
+- Hour cards - approved, pending, rejected states
+
+## Is it Needed for Clubatime?
+
+Given your project's approach (HTML-first, server-side focus, relatively simple UI), Storybook might be **overkill** right now. It adds:
+- Extra dependencies
+- Build configuration
+- Maintenance overhead
+
+It's most valuable for:
+- Large teams needing a shared component library
+- Design systems with many reusable components
+- Projects with complex interactive UI states
+
+**My recommendation**: Skip it for now. Build your components directly in the app. You can always add Storybook later if the component library grows and you need better documentation/isolation.
+
+Would you like me to check if there's any Storybook configuration already in your project, or help with something else?
+
+## User
+
+storybook may be helful no?
+
+## Assistant
+
+You make a fair point! Let me think through why Storybook could actually be helpful for Clubatime:
+
+## Why Storybook Could Be Useful Here
+
+1. **Isolated Component Development** - Since you're building the frontend while the backend is still being set up (using placeholder data), Storybook gives you a nice sandbox to work in without needing real API responses.
+
+2. **State Variations** - You have components with multiple states:
+   - Auth states (signed in/out)
+   - Role-based UI (regular user vs leader vs admin)
+   - Form states (empty, filled, errors, submitting, success)
+   - Submission status (pending, approved, rejected)
+
+3. **Dark Mode Testing** - Easy to toggle and verify your dark mode CSS variables work correctly across all components.
+
+4. **Mobile Breakpoints** - Storybook has viewport addons to test your responsive behavior (like the sidebar hiding under 768px).
+
+5. **Documentation** - As you build out components, you get automatic docs for free — useful if others join the project.
+
+## Svelte + Storybook
+
+Storybook has solid Svelte support. Want me to check your current project setup and scaffold Storybook configuration for you? I can:
+
+1. Check what's already in the project (dependencies, config)
+2. Set up Storybook with Svelte/SvelteKit support
+3. Create a few example stories for your planned components (Navbar, Sidebar, submit form)
+
+Should I take a look at your project structure and get Storybook set up?
+
+## User
+
+ye
+
+**Tool Call: List the `clubatime` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/.svelte-kit
+clubatime/drizzle
+clubatime/node_modules
+clubatime/src
+clubatime/static
+
+# Files:
+clubatime/.gitignore
+clubatime/.npmrc
+clubatime/README.md
+clubatime/biome.json
+clubatime/drizzle.config.ts
+clubatime/package.json
+clubatime/pnpm-lock.yaml
+clubatime/pnpm-workspace.yaml
+clubatime/svelte.config.js
+clubatime/tsconfig.json
+clubatime/vite.config.ts
+
+
+**Tool Call: Read file `package.json`**
+Status: Completed
+
+```json
+{
+  "Text": "{\n\t\"name\": \"clubatime\",\n\t\"private\": true,\n\t\"version\": \"0.0.1\",\n\t\"type\": \"module\",\n\t\"scripts\": {\n\t\t\"dev\": \"vite dev\",\n\t\t\"build\": \"vite build\",\n\t\t\"preview\": \"vite preview\",\n\t\t\"prepare\": \"svelte-kit sync || echo ''\",\n\t\t\"check\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && biome check\",\n\t\t\"check:watch\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch\",\n\t\t\"format\": \"biome check --write\",\n\t\t\"db:push\": \"drizzle-kit push\",\n\t\t\"db:generate\": \"drizzle-kit generate\",\n\t\t\"db:migrate\": \"drizzle-kit migrate\",\n\t\t\"db:studio\": \"drizzle-kit studio\"\n\t},\n\t\"devDependencies\": {\n\t\t\"@biomejs/biome\": \"2.3.8\",\n\t\t\"@sveltejs/adapter-auto\": \"^7.0.0\",\n\t\t\"@sveltejs/kit\": \"^2.48.5\",\n\t\t\"@sveltejs/vite-plugin-svelte\": \"^6.2.1\",\n\t\t\"@types/node\": \"^22\",\n\t\t\"drizzle-kit\": \"^0.31.7\",\n\t\t\"drizzle-orm\": \"^0.44.7\",\n\t\t\"svelte\": \"^5.43.8\",\n\t\t\"svelte-check\": \"^4.3.4\",\n\t\t\"typescript\": \"^5.9.3\",\n\t\t\"vite\": \"^7.2.2\",\n\t\t\"vite-plugin-devtools-json\": \"^1.0.0\"\n\t},\n\t\"dependencies\": {\n\t\t\"better-auth\": \"^1.4.5\",\n\t\t\"postgres\": \"^3.4.7\"\n\t}\n}\n"
+}
+```
+
+**Tool Call: List the `clubatime/src` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib
+clubatime/src/routes
+
+# Files:
+clubatime/src/app.d.ts
+clubatime/src/app.html
+clubatime/src/hooks.server.ts
+
+
+**Tool Call: List the `clubatime/src/lib` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib/assets
+clubatime/src/lib/components
+clubatime/src/lib/server
+clubatime/src/lib/styles
+
+# Files:
+clubatime/src/lib/auth.remote.ts
+clubatime/src/lib/index.ts
+
+
+**Tool Call: Read file `vite.config.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { sveltekit } from \"@sveltejs/kit/vite\";\nimport { defineConfig } from \"vite\";\nimport devtoolsJson from \"vite-plugin-devtools-json\";\n\nexport default defineConfig({\n\tplugins: [sveltekit(), devtoolsJson()],\n});\n"
+}
+```
+
+**Tool Call: Read file `svelte.config.js`**
+Status: Completed
+
+```json
+{
+  "Text": "import adapter from \"@sveltejs/adapter-auto\";\nimport { vitePreprocess } from \"@sveltejs/vite-plugin-svelte\";\n\n/** @type {import('@sveltejs/kit').Config} */\nconst config = {\n\t// Consult https://svelte.dev/docs/kit/integrations\n\t// for more information about preprocessors\n\tpreprocess: vitePreprocess(),\n\tkit: {\n\t\t// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.\n\t\t// If your environment is not supported, or you settled on a specific environment, switch out the adapter.\n\t\t// See https://svelte.dev/docs/kit/adapters for more information about adapters.\n\t\tadapter: adapter(),\n\t\texperimental: {\n\t\t\tremoteFunctions: true,\n\t\t},\n\t},\n\tcompilerOptions: {\n\t\texperimental: {\n\t\t\tasync: true,\n\t\t},\n\t},\n};\n\nexport default config;\n"
+}
+```
+
+**Tool Call: List the `clubatime/src/lib/components` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/components/Navbar.svelte
+
+
+**Tool Call: List the `clubatime/src/lib/styles` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/styles/app.css
+
+
+**Tool Call: Read file `src/lib/components/Navbar.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": ""
+}
+```
+
+**Tool Call: Read file `src/lib/styles/app.css`**
+Status: Completed
+
+```json
+{
+  "Text": ":root {\n    --hc-red: #ec3750;\n    --hc-orange: #ff8c37;\n    --hc-yellow: #f1c40f;\n    --hc-green: #33d6a6;\n    --hc-cyan: #5bc0de;\n    --hc-blue: #338eda;\n    --hc-purple: #a633d6;\n    --hc-muted: #8492a6; /* for disabled/muted text/states */\n\n    --sidebar-width: 220px;\n    --navbar-height: 52px;\n    --radius: 4px;\n    --transition: 120ms ease;\n\n    /* dark mode themeing */\n    --color-bg: #17171d;\n    --color-bg-secondary: #1f1f28;\n    --color-bg-tertiary: #252530;\n    --color-border: #33333d;\n    --color-text: #e1e4e8;\n    --color-text-muted: #8492a6;\n\n    --color-primary: var(--hc-red);\n    --color-primary-hover: #d63045;\n    --color-success: var(--hc-green);\n    --color-warning: var(--hc-yellow);\n    --color-error: var(--hc-red);\n\n    color-scheme: dark;\n}\n\n@media (prefers-color-scheme: light) {\n    :root {\n        --color-bg: #ffffff;\n        --color-bg-secondary: #f9fafb;\n        --color-bg-tertiary: #f1f3f5;\n        --color-border: #e1e4e8;\n        --color-text: #1f2d3d;\n        --color-text-muted: #8492a6;\n\n        color-scheme: light;\n    }\n}\n\n[data-theme=\"dark\"] {\n    --color-bg: #17171d;\n    --color-bg-secondary: #1f1f28;\n    --color-bg-tertiary: #252530;\n    --color-border: #33333d;\n    --color-text: #e1e48e;\n    --color-text-secondary: #c6cbd1;\n    --color-text-muted: #8492a6;\n    color-scheme: dark;\n}\n\n[data-theme=\"light\"] {\n    --color-bg: #ffffff;\n    --color-bg-secondary: #f9fafb;\n    --color-bg-tertiary: #f1f3f5;\n    --color-border: #e1e4e8;\n    --color-text: #1f2d3d;\n    --color-text-secondary: #8492a6;\n    --color-text-muted: #8492a6;\n    color-scheme: light;\n}\n\n*,\n*::before,\n*::after {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n}\n\nhtml,\nbody {\n    height: 100%;\n    font-family:\n        \"monospace\",\n        system-ui,\n        -apple-system,\n        BlinkMacSystemFont,\n        \"Segoe UI\",\n        Roboto,\n        Oxygen,\n        Ubuntu,\n        Cantarell,\n        \"Open Sans\",\n        \"Helvetica Neue\",\n        sans-serif;\n    background-color: var(--color-bg);\n    color: var(--color-text);\n    line-height: 1.5;\n    -webkit-font-smoothing: antialiased;\n}\n\na {\n    color: var(--color-primary);\n    text-decoration: none;\n}\n\na:hover {\n    text-decoration: underline;\n}\n\nbutton {\n    font-family: inherit;\n    font-size: inherit;\n    cursor: pointer;\n}\n\n.visually-hidden {\n    position: absolute;\n    width: 1px;\n    height: 1px;\n    padding: 0;\n    margin: -1px;\n    overflow: hidden;\n    clip: rect(0, 0, 0, 0);\n    white-space: nowrap;\n    border-width: 0;\n}\n"
+}
+```
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Got it! Here's what I found:
+
+- **Svelte 5** project with SvelteKit
+- **pnpm** package manager
+- Nice CSS variables already set up (Hack Club colors, dark/light theming)
+- One component started (`Navbar.svelte` - currently empty)
+- No Storybook yet
+
+## Setting Up Storybook
+
+Storybook 8.x has good Svelte 5 + SvelteKit support. Here's how to set it up:
+
+### 1. Install Storybook
+
+Run this in your project root:
+
+```clubatime/terminal#L1
+pnpm dlx storybook@latest init --type sveltekit
+```
+
+This will:
+- Detect your SvelteKit setup
+- Install the right dependencies (`@storybook/sveltekit`, `@storybook/svelte`, etc.)
+- Create `.storybook/` config folder
+- Add example stories
+
+### 2. After Installation
+
+You'll get these new files:
+
+```/dev/null/structure.txt#L1-5
+.storybook/
+├── main.ts       # Storybook config
+├── preview.ts    # Global decorators, CSS imports
+src/stories/      # Example stories (you can delete these later)
+```
+
+### 3. Import Your Global CSS
+
+Update `.storybook/preview.ts` to include your app styles:
+
+```/dev/null/.storybook/preview.ts#L1-12
+import type { Preview } from '@storybook/svelte';
+import '../src/lib/styles/app.css';
+
+const preview: Preview = {
+  parameters: {
+    backgrounds: {
+      default: 'dark',
+      values: [
+        { name: 'dark', value: '#17171d' },
+        { name: 'light', value: '#ffffff' },
+      ],
+    },
+  },
+};
+
+export default preview;
+```
+
+### 4. Run Storybook
+
+```clubatime/terminal#L1
+pnpm storybook
+```
+
+This opens Storybook at `http://localhost:6006`.
+
+---
+
+## Example Story for Navbar
+
+Once set up, you can create stories like this:
+
+```/dev/null/src/lib/components/Navbar.stories.ts#L1-32
+import type { Meta, StoryObj } from '@storybook/svelte';
+import Navbar from './Navbar.svelte';
+
+const meta = {
+  title: 'Components/Navbar',
+  component: Navbar,
+  tags: ['autodocs'],
+  argTypes: {
+    user: { control: 'object' },
+    isAdmin: { control: 'boolean' },
+    isLeader: { control: 'boolean' },
+  },
+} satisfies Meta<Navbar>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const SignedOut: Story = {
+  args: {
+    user: null,
+  },
+};
+
+export const SignedIn: Story = {
+  args: {
+    user: { name: 'Zach Latta', email: 'zach@hackclub.com' },
+  },
+};
+
+export const Admin: Story = {
+  args: {
+    user: { name: 'Admin User', email: 'admin@hackclub.com' },
+    isAdmin: true,
+  },
+};
+```
+
+---
+
+Want me to run the Storybook init command for you, or would you prefer to run it yourself? After that I can help you create stories for your components (Navbar, Sidebar, submit form states, etc.).
+

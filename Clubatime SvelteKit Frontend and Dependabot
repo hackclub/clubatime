@@ -1,0 +1,1615 @@
+## User
+
+[@SvelteKit clubatime frontend setup](zed:///agent/thread/86fec56d-ca1b-434f-9e88-41467bbce25b?name=SvelteKit+clubatime+frontend+setup)
+based on the issues, what do i need to do?
+also setup depednabot
+
+## Assistant
+
+
+
+Let me first look at the current state of the GitHub issues and the project structure to understand what needs to be done.
+
+**Tool Call: Search files for regex `dependabot`**
+Status: Completed
+
+No matches found
+
+**Tool Call: List the `clubatime` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/.storybook
+clubatime/.svelte-kit
+clubatime/drizzle
+clubatime/node_modules
+clubatime/src
+clubatime/static
+
+# Files:
+clubatime/.gitignore
+clubatime/.npmrc
+clubatime/README.md
+clubatime/biome.json
+clubatime/bun.lock
+clubatime/devenv.lock
+clubatime/devenv.nix
+clubatime/devenv.yaml
+clubatime/drizzle.config.ts
+clubatime/package.json
+clubatime/pnpm-lock.yaml
+clubatime/pnpm-workspace.yaml
+clubatime/svelte.config.js
+clubatime/tsconfig.json
+clubatime/vite.config.ts
+clubatime/vitest.shims.d.ts
+
+
+**Tool Call: List the `clubatime/src` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib
+clubatime/src/routes
+
+# Files:
+clubatime/src/app.d.ts
+clubatime/src/app.html
+clubatime/src/hooks.server.ts
+
+
+**Tool Call: Read file `package.json`**
+Status: Completed
+
+```json
+{
+  "Text": "{\n\t\"name\": \"clubatime\",\n\t\"private\": true,\n\t\"version\": \"0.0.1\",\n\t\"type\": \"module\",\n\t\"scripts\": {\n\t\t\"dev\": \"vite dev\",\n\t\t\"build\": \"vite build\",\n\t\t\"preview\": \"vite preview\",\n\t\t\"prepare\": \"svelte-kit sync || echo ''\",\n\t\t\"check\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && biome check\",\n\t\t\"check:watch\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch\",\n\t\t\"format\": \"biome check --write\",\n\t\t\"db:push\": \"drizzle-kit push\",\n\t\t\"db:generate\": \"drizzle-kit generate\",\n\t\t\"db:migrate\": \"drizzle-kit migrate\",\n\t\t\"db:studio\": \"drizzle-kit studio\",\n\t\t\"storybook\": \"storybook dev -p 6006\",\n\t\t\"build-storybook\": \"storybook build\"\n\t},\n\t\"devDependencies\": {\n\t\t\"@biomejs/biome\": \"2.3.8\",\n\t\t\"@chromatic-com/storybook\": \"^4.1.3\",\n\t\t\"@storybook/addon-a11y\": \"^10.1.7\",\n\t\t\"@storybook/addon-docs\": \"^10.1.7\",\n\t\t\"@storybook/addon-svelte-csf\": \"^5.0.10\",\n\t\t\"@storybook/addon-vitest\": \"^10.1.7\",\n\t\t\"@storybook/sveltekit\": \"^10.1.7\",\n\t\t\"@sveltejs/adapter-auto\": \"^7.0.0\",\n\t\t\"@sveltejs/kit\": \"^2.48.5\",\n\t\t\"@sveltejs/vite-plugin-svelte\": \"^6.2.1\",\n\t\t\"@types/node\": \"^22\",\n\t\t\"@vitest/browser-playwright\": \"^4.0.15\",\n\t\t\"@vitest/coverage-v8\": \"^4.0.15\",\n\t\t\"drizzle-kit\": \"^0.31.7\",\n\t\t\"drizzle-orm\": \"^0.44.7\",\n\t\t\"playwright\": \"^1.57.0\",\n\t\t\"storybook\": \"^10.1.7\",\n\t\t\"svelte\": \"^5.43.8\",\n\t\t\"svelte-check\": \"^4.3.4\",\n\t\t\"typescript\": \"^5.9.3\",\n\t\t\"vite\": \"^7.2.2\",\n\t\t\"vite-plugin-devtools-json\": \"^1.0.0\",\n\t\t\"vitest\": \"^4.0.15\"\n\t},\n\t\"dependencies\": {\n\t\t\"better-auth\": \"^1.4.5\",\n\t\t\"postgres\": \"^3.4.7\"\n\t},\n\t\"packageManager\": \"pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6\"\n}\n"
+}
+```
+
+**Tool Call: List the `clubatime/.github` directory's contents**
+Status: Failed
+
+Path not found: clubatime/.github
+
+**Tool Call: Find paths matching “`clubatime/.github/**/*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: List the `clubatime/src/lib` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib/assets
+clubatime/src/lib/components
+clubatime/src/lib/server
+clubatime/src/lib/styles
+
+# Files:
+clubatime/src/lib/auth.remote.ts
+clubatime/src/lib/index.ts
+
+
+**Tool Call: List the `clubatime/src/routes` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/routes/+layout.svelte
+clubatime/src/routes/+page.svelte
+
+
+**Tool Call: List the `clubatime/src/lib/components` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/components/navbar.svelte
+clubatime/src/lib/components/sidebar.svelte
+
+
+**Tool Call: List the `clubatime/src/lib/assets` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/assets/favicon.svg
+clubatime/src/lib/assets/flag-standalone.svg
+
+
+**Tool Call: List the `clubatime/src/lib/server` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib/server/db
+
+# Files:
+clubatime/src/lib/server/auth.ts
+
+
+**Tool Call: Read file `src/routes/+page.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\nimport { getSession } from \"$lib/auth.remote\";\n\nconst session = await getSession();\n</script>\n\n<div class=\"page\">\n    <header class=\"page.header\">\n        <h1>Welcome to Clubatime</h1>\n        <p class=\"subititle\">Track your club hours and earn rewards</p>\n    </header>\n\n    <div class=\"card\">\n        <p class=\"muted\">Loading...</p>\n    </div>\n    {#if session?.user}\n        <div class=\"card\">\n            <h2>Hey, {session.user.name}!</h2>\n            <p>Sucessfully signed in and ready to track</p>\n            <div class=\"card-actions\">\n                <a href=\"/submit\" class=\"btn btn-primary\">Submit a Project</a>\n                <a href=\"/hours\" class=\"btn btn-secondary\">View My Hours</a>\n            </div>\n        </div>\n    {:else}\n        <div class=\"card\">\n            <h2>Get Started</h2>\n            <p>Sign in with your Hack Club account</p>\n        </div>\n    {/if}\n</div>\n"
+}
+```
+
+**Tool Call: Read file `src/routes/+layout.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import \"$lib/styles/app.css\";\n    import Navbar from \"$lib/components/navbar.svelte\";\n    import Sidebar from \"$lib/components/sidebar.svelte\";\n    import favicon from \"$lib/assets/favicon.svg\";\n\n    const { children } = $props();\n</script>\n\n<svelte:head>\n    <link rel=\"icon href={favicon}\" />\n    <title>Clubatime</title>\n</svelte:head>\n\n<div class=\"app-layout\">\n    <Navbar />\n    <Sidebar />\n    <main class=\"app-main\">\n        <div class=\"app-content\">\n            {@render children()}\n        </div>\n    </main>\n</div>\n\n<style>\n    .app-layout {\n        display: flex;\n        flex-direction: column;\n        min-height: 100vh;\n    }\n\n    .app-main {\n        display: flex;\n        flex-direction: column;\n        min-height: 100vh;\n    }\n\n    .app-content {\n        flex: 1;\n        padding: 24px;\n        margin-left: var(--navbar-height);\n        max-width: 1000px;\n    }\n\n    @media (max-width: 768px) {\n        .app-content {\n            margin-left: 0;\n            padding: 16px;\n        }\n    }\n</style>\n"
+}
+```
+
+**Tool Call: List the `clubatime/src/lib/styles` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/styles/app.css
+
+
+**Tool Call: Read file `src/lib/components/navbar.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\nimport { getSession, signIn, signOut } from \"$lib/auth.remote\";\n\nconst session = await getSession();\n</script>\n\n<nav>\n    <a href=\"/\" class=\"brand\">\n        <img\n            src=\"$lib/assests/flag-standalone.svg\"\n            alt=\"A red flag with a brown base, and the words &quot;Hack Club&quot; in white inside the flag\"\n            class=\"logo\"\n        />\n        <span class=\"brand-text\">Clubatime</span>\n    </a>\n\n    <div class=\"user-area\">\n        {#if session?.user}\n            <span class=\"username\">{session.user.name}</span>\n            <form {...signOut}>\n                <button type=\"submit\" class=\"btn btn-secondary\">Sign Out</button\n                >\n            </form>\n        {:else}\n            <form {...signIn}>\n                <button type=\"submit\" class=\"btn btn-primary\">\n                    Sign in with Hack Club\n                </button>\n            </form>\n        {/if}\n    </div>\n</nav>\n\n<style>\n    nav {\n        position: fixed;\n        top: 0;\n        left: 0;\n        right: 0;\n        height: var(--navbar-height);\n        background: var(--color-bg-secondary);\n        border-bottom: 1px solid var(--color-border);\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: 0 16px;\n        z-index: 100;\n    }\n\n    .brand {\n        display: flex;\n        align-items: center;\n        gap: 10px;\n        color: var(--color-text);\n        text-decoration: none;\n    }\n\n    .brand:hover {\n        text-decoration: none;\n    }\n\n    .logo {\n        height: 28px;\n        width: auto;\n    }\n\n    .brand-text {\n        font-weight: 600;\n        font-size: 1.1rem;\n    }\n\n    .user-area {\n        display: flex;\n        align-items: center;\n        gap: 12px;\n    }\n\n    .username {\n        color: var(--color-text-muted);\n        font-size: 0.9rem;\n    }\n\n    .btn {\n        padding: 8px 14px;\n        border-radius: var(--radius);\n        font-weight: 500;\n        font-size: 0.9rem;\n        border: none;\n        transition: background var(--transition);\n    }\n\n    .btn-primary {\n        background: var(--color-primary);\n        color: white;\n    }\n\n    .btn-primary:hover {\n        background: var(--color-primary-hover);\n    }\n\n    .btn-secondary {\n        background: var(--color-bg-tertiary);\n        color: var(--color-text);\n        border: 1px solid var(--color-border);\n    }\n\n    .btn-secondary:hover {\n        background: var(--color-border);\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/auth.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { drizzleAdapter } from \"better-auth/adapters/drizzle\";\nimport { betterAuth } from \"better-auth/minimal\";\nimport { genericOAuth } from \"better-auth/plugins\";\nimport { sveltekitCookies } from \"better-auth/svelte-kit\";\nimport { getRequestEvent } from \"$app/server\";\nimport { env } from \"$env/dynamic/private\";\nimport { db } from \"./db\";\n\nexport const auth = betterAuth({\n\tdatabase: drizzleAdapter(db, {\n\t\tprovider: \"pg\",\n\t}),\n\tbaseURL: env.BETTER_AUTH_URL,\n\texperimental: {\n\t\tjoins: true,\n\t},\n\tplugins: [\n\t\tgenericOAuth({\n\t\t\tconfig: [\n\t\t\t\t{\n\t\t\t\t\tproviderId: \"hackclub\",\n\t\t\t\t\tclientId: env.HACKCLUB_CLIENT_ID,\n\t\t\t\t\tclientSecret: env.HACKCLUB_CLIENT_SECRET,\n\t\t\t\t\tdiscoveryUrl:\n\t\t\t\t\t\t\"https://auth.hackclub.com/.well-known/openid-configuration\",\n\t\t\t\t\tscopes: [\"openid\", \"profile\", \"email\", \"name\", \"verification_status\"],\n\t\t\t\t},\n\t\t\t],\n\t\t}),\n\t\tsveltekitCookies(getRequestEvent),\n\t],\n\tsession: {\n\t\tcookieCache: {\n\t\t\tenabled: true,\n\t\t\tmaxAge: 5 * 60, // 5 minutes (maxAge is in seconds)\n\t\t},\n\t},\n});\n\nexport type ServerSession = typeof auth.$Infer.Session.session;\nexport type ServerUser = typeof auth.$Infer.Session.user;\n"
+}
+```
+
+**Tool Call: Read file `src/lib/components/sidebar.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { page } from \"$app/state\";\n    import { getSession } from \"$lib/auth.remote\";\n\n    // Check if current path matches\n    function isActive(path: string): boolean {\n        if (path === \"/\") {\n            return page.url.pathname === \"/\";\n        }\n        return page.url.pathname.startsWith(path);\n    }\n</script>\n\n<aside class=\"sidebar\">\n    <nav class=\"sidebar-nav\">\n        <div class=\"nav-section\">\n            <span class=\"nav-label\">>Menu</span>\n            <a href=\"/\" class=\"nav-link\" class:active={isActive(\"/\")}>\n                <svg\n                    width=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <path d=\"M3 919-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />\n                    <polyline points=\"9 22 9 12 15 12 15 22\" />\n                </svg>\n                Home\n            </a>\n            <a href=\"/hours\" class=\"nav-link\" class:active={isActive(\"/hours\")}>\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <path\n                        d=\"M3 9l9-7 9 7v11a2 2 0 0 0 1-2 2H5a2 2 0 0 1-2-2z\"\n                    />\n                    <polyline points=\"9 22 9 12 15 12 15 22\" />\n                </svg>\n                My Hours\n            </a>\n            <a\n                href=\"/submit\"\n                class=\"nav-link\"\n                class:active={isActive(\"/submit\")}\n            >\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <path\n                        d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"\n                    />\n                    <polyline points=\"12 6 12 12 16 14\" />\n                    <line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"12\" />\n                    <line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\" />\n                </svg>\n                Submit Project\n            </a>\n        </div>\n\n        {#await getSession() then session}\n            {#if session?.user}\n                <div class=\"nav-section\">\n                    <span class=\"nav-label\">Club</span>\n                    <a\n                        href=\"/club\"\n                        class=\"nav-link\"\n                        class:active={isActive(\"/club\")}\n                    >\n                        <svg\n                            width=\"18\"\n                            height=\"18\"\n                            viewBox=\"0 0 24 24\"\n                            fill=\"none\"\n                            stroke=\"currentColor\"\n                            stroke-width=\"2\"\n                        >\n                            <path\n                                d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"\n                            />\n                            <circle cx=\"9\" cy=\"7\" r=\"4\" />\n                            <path d=\"M23 21v-2a4 0 0 0-3-3.87\" />\n                            <path d=\"M16 3.13a4 4 0 0 1 0 7.75\" />\n                        </svg>\n                        My Club\n                    </a>\n                    <a\n                        href=\"/admin\"\n                        class=\"nav-link\"\n                        class:active={isActive(\"/admin\")}\n                    >\n                        <svg\n                            width=\"18\"\n                            height=\"18\"\n                            viewBox=\"0 0 24 24\"\n                            fill=\"none\"\n                            stroke=\"currentColor\"\n                            stroke-width=\"2\"\n                        >\n                            <circle cx=\"12\" cy=\"12\" r=\"3\" />\n                            <path\n                                d=\"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z\"\n                            />\n                        </svg>\n                        Admin\n                    </a>\n                </div>\n            {/if}\n        {/await}\n    </nav>\n</aside>\n\n<style>\n    .sidebar {\n        position: fixed;\n        top: var(--navbar-height);\n        left: 0;\n        bottom: 0;\n        width: var(--sidebar-width);\n        background: var(--color-border);\n        padding: 16px 0;\n        overflow-y: auto;\n        z-index: 90;\n    }\n\n    @media (max-width: 760px) {\n        .sidebar {\n            display: none;\n        }\n    }\n\n    .nav-section {\n        padding: 0 12px;\n    }\n\n    .nav-label {\n        display: block;\n        font-size: 0.7rem;\n    }\n\n    .nav-link {\n        display: flex;\n        align-items: center;\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/styles/app.css`**
+Status: Completed
+
+```json
+{
+  "Text": ":root {\n\t--hc-red: #ec3750;\n\t--hc-orange: #ff8c37;\n\t--hc-yellow: #f1c40f;\n\t--hc-green: #33d6a6;\n\t--hc-cyan: #5bc0de;\n\t--hc-blue: #338eda;\n\t--hc-purple: #a633d6;\n\t--hc-muted: #8492a6; /* for disabled/muted text/states */\n\n\t--sidebar-width: 220px;\n\t--navbar-height: 52px;\n\t--radius: 4px;\n\t--transition: 120ms ease;\n\n\t/* dark mode themeing */\n\t--color-bg: #17171d;\n\t--color-bg-secondary: #1f1f28;\n\t--color-bg-tertiary: #252530;\n\t--color-border: #33333d;\n\t--color-text: #e1e4e8;\n\t--color-text-muted: #8492a6;\n\n\t--color-primary: var(--hc-red);\n\t--color-primary-hover: #d63045;\n\t--color-success: var(--hc-green);\n\t--color-warning: var(--hc-yellow);\n\t--color-error: var(--hc-red);\n\n\tcolor-scheme: dark;\n}\n\n@media (prefers-color-scheme: light) {\n\t:root {\n\t\t--color-bg: #ffffff;\n\t\t--color-bg-secondary: #f9fafb;\n\t\t--color-bg-tertiary: #f1f3f5;\n\t\t--color-border: #e1e4e8;\n\t\t--color-text: #1f2d3d;\n\t\t--color-text-muted: #8492a6;\n\n\t\tcolor-scheme: light;\n\t}\n}\n\n[data-theme=\"dark\"] {\n\t--color-bg: #17171d;\n\t--color-bg-secondary: #1f1f28;\n\t--color-bg-tertiary: #252530;\n\t--color-border: #33333d;\n\t--color-text: #e1e48e;\n\t--color-text-secondary: #c6cbd1;\n\t--color-text-muted: #8492a6;\n\tcolor-scheme: dark;\n}\n\n[data-theme=\"light\"] {\n\t--color-bg: #ffffff;\n\t--color-bg-secondary: #f9fafb;\n\t--color-bg-tertiary: #f1f3f5;\n\t--color-border: #e1e4e8;\n\t--color-text: #1f2d3d;\n\t--color-text-secondary: #8492a6;\n\t--color-text-muted: #8492a6;\n\tcolor-scheme: light;\n}\n\n*,\n*::before,\n*::after {\n\tbox-sizing: border-box;\n\tmargin: 0;\n\tpadding: 0;\n}\n\nhtml,\nbody {\n\theight: 100%;\n\tfont-family:\n\t\t\"monospace\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\",\n\t\tRoboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", sans-serif;\n\tbackground-color: var(--color-bg);\n\tcolor: var(--color-text);\n\tline-height: 1.5;\n\t-webkit-font-smoothing: antialiased;\n}\n\na {\n\tcolor: var(--color-primary);\n\ttext-decoration: none;\n}\n\na:hover {\n\ttext-decoration: underline;\n}\n\nbutton {\n\tfont-family: inherit;\n\tfont-size: inherit;\n\tcursor: pointer;\n}\n\n.visually-hidden {\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tpadding: 0;\n\tmargin: -1px;\n\toverflow: hidden;\n\tclip: rect(0, 0, 0, 0);\n\twhite-space: nowrap;\n\tborder-width: 0;\n}\n"
+}
+```
+
+**Tool Call: Read file `src/lib/auth.remote.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { redirect } from \"@sveltejs/kit\";\nimport { form, getRequestEvent, query } from \"$app/server\";\nimport { auth } from \"./server/auth\";\n\nexport const getSession = query(\n\tasync () =>\n\t\tawait auth.api.getSession({\n\t\t\theaders: getRequestEvent().request.headers,\n\t\t}),\n);\n\nexport const signIn = form(async () => {\n\tconst data = await auth.api.signInWithOAuth2({\n\t\tbody: {\n\t\t\tproviderId: \"hackclub\",\n\t\t\tcallbackURL: \"/\",\n\t\t\terrorCallbackURL: \"/error-page\",\n\t\t},\n\t\theaders: getRequestEvent().request.headers,\n\t});\n\n\tif (data.redirect) {\n\t\tredirect(303, data.url);\n\t}\n\n\tawait getSession().refresh();\n});\n\nexport const signOut = form(async () => {\n\tconst { success } = await auth.api.signOut({\n\t\theaders: getRequestEvent().request.headers,\n\t});\n\n\tif (success) {\n\t\tgetSession().set(null);\n\t}\n});\n"
+}
+```
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Let me check the GitHub issues and the remaining project files:
+
+**Tool Call: Read file `src/hooks.server.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import type { Handle } from \"@sveltejs/kit\";\nimport { svelteKitHandler } from \"better-auth/svelte-kit\";\nimport { building } from \"$app/environment\";\nimport { auth } from \"$lib/server/auth\";\n\nexport const handle: Handle = async ({ event, resolve }) => {\n\t// Fetch current session from Better Auth\n\tconst session = await auth.api.getSession({\n\t\theaders: event.request.headers,\n\t});\n\n\t// Make session and user available on server\n\tif (session) {\n\t\tevent.locals.session = session.session;\n\t\tevent.locals.user = session.user;\n\t}\n\n\treturn svelteKitHandler({ event, resolve, auth, building });\n};\n"
+}
+```
+
+**Tool Call: Fetch https://github.com/hackclub/clubatime/issues**
+Status: Completed
+
+Skip to content                                                                         
+
+## Navigation Menu
+
+      Toggle navigation                                                                                                                Sign in                                         Appearance settings                                                                                                                         Search or jump to...                                                      
+
+# Search code, repositories, users, issues, pull requests...
+
+                                                           Search                                                                                                                                 Clear                                                            
+
+                                                                                  Search syntax tips                                                              
+
+#         Provide feedback       
+
+                                                                   
+
+We read every piece of feedback, and take your input very seriously.                              Include my email address so I can be contacted                          Cancel              Submit feedback                          
+
+#         Saved searches       
+
+        
+
+## Use saved searches to filter your results more quickly
+
+                                                                                                          Name                                                                                    Query                                
+
+            To see all available qualifiers, see our documentation.                                                                       Cancel              Create saved search                                                Sign in                                                         Sign up                                               Appearance settings                      Resetting focus                                                 You signed in with another tab or window. Reload to refresh your session.        You signed out in another tab or window. Reload to refresh your session.        You switched accounts on another tab or window. Reload to refresh your session.          Dismiss alert                                                                                                                                          hackclub        /    **      clubatime    **    Public                              
+               -                     Notifications    You must be signed in to change notification settings  
+  -                   Fork     1  
+  -                                   Star          2  
+
+                                                                       
+
+# Issues
+
+Search Issuesis:issue state:open is:issue state:open Search
+
+LabelsMilestonesNew issue
+
+## Search results
+
+OpenClosed
+- 
+
+### seed clubs table from clubs API
+
+backendServer-side, API, databaseServer-side, API, databasedatabasePostgres / DrizzlePostgres / Drizzlepriority: mediumShould be done soonShould be done soonStatus: Open.#39 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### submission data access functions
+
+backendServer-side, API, databaseServer-side, API, databasedatabasePostgres / DrizzlePostgres / Drizzlepriority: highMust be done firstMust be done firstStatus: Open.#38 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### submissions + clubs drizzle schema
+
+backendServer-side, API, databaseServer-side, API, databasedatabasePostgres / DrizzlePostgres / Drizzlepriority: highMust be done firstMust be done firstStatus: Open.#37 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### error page
+
+frontendUI/UX and component workUI/UX and component workpriority: mediumShould be done soonShould be done soonStatus: Open.#36 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### mobile nav (hamburger menu or bottom nav)
+
+frontendUI/UX and component workUI/UX and component workpriority: lowNice to haveNice to haveStatus: Open.#35 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### add vitest
+
+infrastructureBuild, deploy, configBuild, deploy, configpriority: lowNice to haveNice to haveStatus: Open.#34 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### rewards page
+
+frontendUI/UX and component workUI/UX and component workpriority: lowNice to haveNice to haveStatus: Open.#33 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### input validation on all remote functions
+
+backendServer-side, API, databaseServer-side, API, databasepriority: mediumShould be done soonShould be done soonStatus: Open.#32 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### env vars documentation
+
+infrastructureBuild, deploy, configBuild, deploy, configpriority: highMust be done firstMust be done firstStatus: Open.#31 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### cache clubs API responses
+
+backendServer-side, API, databaseServer-side, API, databasepriority: mediumShould be done soonShould be done soonStatus: Open.#30 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### club leader dashboard
+
+backendServer-side, API, databaseServer-side, API, databasefrontendUI/UX and component workUI/UX and component workpriority: mediumShould be done soonShould be done soonStatus: Open.#27 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### admin review dashboard
+
+backendServer-side, API, databaseServer-side, API, databasefrontendUI/UX and component workUI/UX and component workpriority: mediumShould be done soonShould be done soonStatus: Open.#26 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+
+                      
+
+## Footer
+
+                                           © 2026 GitHub, Inc.                                                     You can’t perform that action at this time.
+
+**Tool Call: Read file `src/app.html`**
+Status: Completed
+
+```json
+{
+  "Text": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    %sveltekit.head%\n  </head>\n  <body data-sveltekit-preload-data=\"hover\">\n    <div style=\"display: contents\">%sveltekit.body%</div>\n  </body>\n</html>\n"
+}
+```
+
+**Tool Call: List the `clubatime/src/lib/server/db` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib/server/db/schema
+
+# Files:
+clubatime/src/lib/server/db/index.ts
+
+
+**Tool Call: Fetch https://github.com/hackclub/clubatime/issues?page\=2**
+Status: Completed
+
+Skip to content                                                                         
+
+## Navigation Menu
+
+      Toggle navigation                                                                                                                Sign in                                         Appearance settings                                                                                                                         Search or jump to...                                                      
+
+# Search code, repositories, users, issues, pull requests...
+
+                                                           Search                                                                                                                                 Clear                                                            
+
+                                                                                  Search syntax tips                                                              
+
+#         Provide feedback       
+
+                                                                   
+
+We read every piece of feedback, and take your input very seriously.                              Include my email address so I can be contacted                          Cancel              Submit feedback                          
+
+#         Saved searches       
+
+        
+
+## Use saved searches to filter your results more quickly
+
+                                                                                                          Name                                                                                    Query                                
+
+            To see all available qualifiers, see our documentation.                                                                       Cancel              Create saved search                                                Sign in                                                         Sign up                                               Appearance settings                      Resetting focus                                                 You signed in with another tab or window. Reload to refresh your session.        You signed out in another tab or window. Reload to refresh your session.        You switched accounts on another tab or window. Reload to refresh your session.          Dismiss alert                                                                                                                                          hackclub        /    **      clubatime    **    Public                              
+               -                     Notifications    You must be signed in to change notification settings  
+  -                   Fork     1  
+  -                                   Star          2  
+
+                                                                       
+
+# Issues
+
+Search Issuesis:issue state:open is:issue state:open Search
+
+LabelsMilestonesNew issue
+
+## Search results
+
+OpenClosed
+- 
+
+### wire up layout with navbar + sidebar
+
+frontendUI/UX and component workUI/UX and component workpriority: highMust be done firstMust be done firstStatus: Open.#11 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+
+                      
+
+## Footer
+
+                                           © 2026 GitHub, Inc.                                                     You can’t perform that action at this time.
+
+**Tool Call: List the `clubatime/src/lib/server/db/schema` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/server/db/schema/auth.ts
+clubatime/src/lib/server/db/schema/projects.ts
+
+
+**Tool Call: Read file `src/lib/server/db/index.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { drizzle } from \"drizzle-orm/postgres-js\";\nimport postgres from \"postgres\";\nimport { env } from \"$env/dynamic/private\";\nimport * as authSchema from \"./schema/auth\";\nimport * as projectsSchema from \"./schema/projects\";\n\nif (!env.DATABASE_URL) throw new Error(\"DATABASE_URL is not set\");\n\nconst client = postgres(env.DATABASE_URL);\n\nexport const db = drizzle(client, {\n\tschema: { ...projectsSchema, ...authSchema },\n});\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/schema/auth.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { relations } from \"drizzle-orm\";\nimport { boolean, index, pgTable, text, timestamp } from \"drizzle-orm/pg-core\";\n\nexport const user = pgTable(\n\t\"user\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\tname: text(\"name\").notNull(),\n\t\temail: text(\"email\").notNull().unique(),\n\t\temailVerified: boolean(\"email_verified\").default(false).notNull(),\n\t\timage: text(\"image\"),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.defaultNow()\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"user_email_idx\").on(table.email)],\n);\n\nexport const session = pgTable(\n\t\"session\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\texpiresAt: timestamp(\"expires_at\").notNull(),\n\t\ttoken: text(\"token\").notNull().unique(),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t\tipAddress: text(\"ip_address\"),\n\t\tuserAgent: text(\"user_agent\"),\n\t\tuserId: text(\"user_id\")\n\t\t\t.notNull()\n\t\t\t.references(() => user.id, { onDelete: \"cascade\" }),\n\t},\n\t(table) => [\n\t\tindex(\"session_userId_idx\").on(table.userId),\n\t\tindex(\"session_token_idx\").on(table.token),\n\t],\n);\n\nexport const account = pgTable(\n\t\"account\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\taccountId: text(\"account_id\").notNull(),\n\t\tproviderId: text(\"provider_id\").notNull(),\n\t\tuserId: text(\"user_id\")\n\t\t\t.notNull()\n\t\t\t.references(() => user.id, { onDelete: \"cascade\" }),\n\t\taccessToken: text(\"access_token\"),\n\t\trefreshToken: text(\"refresh_token\"),\n\t\tidToken: text(\"id_token\"),\n\t\taccessTokenExpiresAt: timestamp(\"access_token_expires_at\"),\n\t\trefreshTokenExpiresAt: timestamp(\"refresh_token_expires_at\"),\n\t\tscope: text(\"scope\"),\n\t\tpassword: text(\"password\"),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"account_userId_idx\").on(table.userId)],\n);\n\nexport const verification = pgTable(\n\t\"verification\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\tidentifier: text(\"identifier\").notNull(),\n\t\tvalue: text(\"value\").notNull(),\n\t\texpiresAt: timestamp(\"expires_at\").notNull(),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.defaultNow()\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"verification_identifier_idx\").on(table.identifier)],\n);\n\nexport const userRelations = relations(user, ({ many }) => ({\n\tsessions: many(session),\n\taccounts: many(account),\n}));\n\nexport const sessionRelations = relations(session, ({ one }) => ({\n\tuser: one(user, {\n\t\tfields: [session.userId],\n\t\treferences: [user.id],\n\t}),\n}));\n\nexport const accountRelations = relations(account, ({ one }) => ({\n\tuser: one(user, {\n\t\tfields: [account.userId],\n\t\treferences: [user.id],\n\t}),\n}));\n"
+}
+```
+
+**Tool Call: Read file `svelte.config.js`**
+Status: Completed
+
+```json
+{
+  "Text": "import adapter from \"@sveltejs/adapter-auto\";\nimport { vitePreprocess } from \"@sveltejs/vite-plugin-svelte\";\n\n/** @type {import('@sveltejs/kit').Config} */\nconst config = {\n\t// Consult https://svelte.dev/docs/kit/integrations\n\t// for more information about preprocessors\n\tpreprocess: vitePreprocess(),\n\tkit: {\n\t\t// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.\n\t\t// If your environment is not supported, or you settled on a specific environment, switch out the adapter.\n\t\t// See https://svelte.dev/docs/kit/adapters for more information about adapters.\n\t\tadapter: adapter(),\n\t\texperimental: {\n\t\t\tremoteFunctions: true,\n\t\t},\n\t},\n\tcompilerOptions: {\n\t\texperimental: {\n\t\t\tasync: true,\n\t\t},\n\t},\n};\n\nexport default config;\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/schema/projects.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { integer, pgTable, serial } from \"drizzle-orm/pg-core\";\n"
+}
+```
+
+**Tool Call: Read file `drizzle.config.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { defineConfig } from \"drizzle-kit\";\n\nif (!process.env.DATABASE_URL) throw new Error(\"DATABASE_URL is not set\");\n\nexport default defineConfig({\n\tschema: \"./src/lib/server/db/schema\",\n\tdialect: \"postgresql\",\n\tdbCredentials: { url: process.env.DATABASE_URL },\n\tverbose: true,\n\tstrict: true,\n});\n"
+}
+```
+
+**Tool Call: Read file `src/app.d.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "// See https://svelte.dev/docs/kit/types#app.d.ts\n\nimport type { ServerSession, ServerUser } from \"$lib/server/auth\";\n\n// for information about these interfaces, see https://svelte.dev/docs/kit/types#app.d.ts\ndeclare global {\n\tnamespace App {\n\t\t// interface Error {}\n\t\tinterface Locals {\n\t\t\tsession?: ServerSession;\n\t\t\tuser?: ServerUser;\n\t\t}\n\t\t// interface PageData {}\n\t\t// interface PageState {}\n\t\t// interface Platform {}\n\t}\n}\n"
+}
+```
+
+**Tool Call: Read file `.gitignore`**
+Status: Completed
+
+```json
+{
+  "Text": "node_modules\n\n# Output\n.output\n.vercel\n.netlify\n.wrangler\n/.svelte-kit\n/build\n\n# OS\n.DS_Store\nThumbs.db\n\n# Env\n.env\n.env.*\n!.env.example\n!.env.test\n\n# Vite\nvite.config.js.timestamp-*\nvite.config.ts.timestamp-*\n\n*storybook.log\nstorybook-static\n\n# Devenv\n.devenv*\ndevenv.local.nix\ndevenv.local.yaml\n\n# direnv\n.direnv\n\n# pre-commit\n.pre-commit-config.yaml\n"
+}
+```
+
+## Assistant
+
+Now let me also check the full list of open issues more carefully by fetching individual issue details:
+
+**Tool Call: Fetch https://github.com/hackclub/clubatime/issues?q\=is%3Aissue\+state%3Aopen\&page\=1**
+Status: Completed
+
+Skip to content                                                                         
+
+## Navigation Menu
+
+      Toggle navigation                                                                                                                Sign in                                         Appearance settings                                                                                                                         is:issue state:open                                                      
+
+# Search code, repositories, users, issues, pull requests...
+
+                                                           Search                                                                                                                                 Clear                                                            
+
+                                                                                  Search syntax tips                                                              
+
+#         Provide feedback       
+
+                                                                   
+
+We read every piece of feedback, and take your input very seriously.                              Include my email address so I can be contacted                          Cancel              Submit feedback                          
+
+#         Saved searches       
+
+        
+
+## Use saved searches to filter your results more quickly
+
+                                                                                                          Name                                                                                    Query                                
+
+            To see all available qualifiers, see our documentation.                                                                       Cancel              Create saved search                                                Sign in                                                         Sign up                                               Appearance settings                      Resetting focus                                                 You signed in with another tab or window. Reload to refresh your session.        You signed out in another tab or window. Reload to refresh your session.        You switched accounts on another tab or window. Reload to refresh your session.          Dismiss alert                                                                                                                                          hackclub        /    **      clubatime    **    Public                              
+               -                     Notifications    You must be signed in to change notification settings  
+  -                   Fork     1  
+  -                                   Star          2  
+
+                                                                       
+
+# Issues
+
+Search Issuesis:issue state:openis:issue state:openSearch
+
+LabelsMilestonesNew issue
+
+## Search results
+
+OpenClosed
+- 
+
+### seed clubs table from clubs API
+
+backendServer-side, API, databaseServer-side, API, databasedatabasePostgres / DrizzlePostgres / Drizzlepriority: mediumShould be done soonShould be done soonStatus: Open.#39 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### submission data access functions
+
+backendServer-side, API, databaseServer-side, API, databasedatabasePostgres / DrizzlePostgres / Drizzlepriority: highMust be done firstMust be done firstStatus: Open.#38 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### submissions + clubs drizzle schema
+
+backendServer-side, API, databaseServer-side, API, databasedatabasePostgres / DrizzlePostgres / Drizzlepriority: highMust be done firstMust be done firstStatus: Open.#37 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### error page
+
+frontendUI/UX and component workUI/UX and component workpriority: mediumShould be done soonShould be done soonStatus: Open.#36 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### mobile nav (hamburger menu or bottom nav)
+
+frontendUI/UX and component workUI/UX and component workpriority: lowNice to haveNice to haveStatus: Open.#35 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### add vitest
+
+infrastructureBuild, deploy, configBuild, deploy, configpriority: lowNice to haveNice to haveStatus: Open.#34 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### rewards page
+
+frontendUI/UX and component workUI/UX and component workpriority: lowNice to haveNice to haveStatus: Open.#33 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### input validation on all remote functions
+
+backendServer-side, API, databaseServer-side, API, databasepriority: mediumShould be done soonShould be done soonStatus: Open.#32 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### env vars documentation
+
+infrastructureBuild, deploy, configBuild, deploy, configpriority: highMust be done firstMust be done firstStatus: Open.#31 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### cache clubs API responses
+
+backendServer-side, API, databaseServer-side, API, databasepriority: mediumShould be done soonShould be done soonStatus: Open.#30 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### club leader dashboard
+
+backendServer-side, API, databaseServer-side, API, databasefrontendUI/UX and component workUI/UX and component workpriority: mediumShould be done soonShould be done soonStatus: Open.#27 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+- 
+
+### admin review dashboard
+
+backendServer-side, API, databaseServer-side, API, databasefrontendUI/UX and component workUI/UX and component workpriority: mediumShould be done soonShould be done soonStatus: Open.#26 In hackclub/clubatime;· System-End  opened on Feb 16, 2026
+
+                      
+
+## Footer
+
+                                           © 2026 GitHub, Inc.                                                     You can’t perform that action at this time.
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Let me also check the closed issues to understand the full picture:
+
+**Tool Call: Fetch https://github.com/hackclub/clubatime/issues?q\=is%3Aissue\+state%3Aclosed**
+Status: Completed
+
+Skip to content                                                                         
+
+## Navigation Menu
+
+      Toggle navigation                                                                                                                Sign in                                         Appearance settings                                                                                                                         is:issue state:closed                                                      
+
+# Search code, repositories, users, issues, pull requests...
+
+                                                           Search                                                                                                                                 Clear                                                            
+
+                                                                                  Search syntax tips                                                              
+
+#         Provide feedback       
+
+                                                                   
+
+We read every piece of feedback, and take your input very seriously.                              Include my email address so I can be contacted                          Cancel              Submit feedback                          
+
+#         Saved searches       
+
+        
+
+## Use saved searches to filter your results more quickly
+
+                                                                                                          Name                                                                                    Query                                
+
+            To see all available qualifiers, see our documentation.                                                                       Cancel              Create saved search                                                Sign in                                                         Sign up                                               Appearance settings                      Resetting focus                                                 You signed in with another tab or window. Reload to refresh your session.        You signed out in another tab or window. Reload to refresh your session.        You switched accounts on another tab or window. Reload to refresh your session.          Dismiss alert                                                                                                                                          hackclub        /    **      clubatime    **    Public                              
+               -                     Notifications    You must be signed in to change notification settings  
+  -                   Fork     1  
+  -                                   Star          2  
+
+                                                                       
+
+# Issues
+
+Search Issuesis:issue state:closedis:issue state:closedSearch
+
+LabelsMilestonesNew issue
+
+## Search results
+
+OpenClosed
+- 
+
+### airtable sync strategy
+
+backendServer-side, API, databaseServer-side, API, databasepriority: mediumShould be done soonShould be done soonStatus: Not planned (skipped).#29 In hackclub/clubatime;·  by System-End  was closed on Feb 16, 2026
+- 
+
+### postgres cache schema for submissions
+
+backendServer-side, API, databaseServer-side, API, databasepriority: mediumShould be done soonShould be done soonStatus: Not planned (skipped).#28 In hackclub/clubatime;·  by System-End  was closed on Feb 16, 2026
+- 
+
+### airtable API client
+
+backendServer-side, API, databaseServer-side, API, databasepriority: highMust be done firstMust be done firstStatus: Not planned (skipped).#20 In hackclub/clubatime;·  by System-End  was closed on Feb 16, 2026
+
+                      
+
+## Footer
+
+                                           © 2026 GitHub, Inc.                                                     You can’t perform that action at this time.
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Alright, I've done a thorough review of the repo and the 13 open GitHub issues. Here's the full picture:
+
+---
+
+## Open Issues — Prioritized Action Plan
+
+### 🔴 Priority: High (Do first)
+
+| # | Issue | Type | What to do |
+|---|-------|------|------------|
+| **#11** | Wire up layout with Navbar + Sidebar | frontend | Already partially done — layout imports components. But there are **bugs** (see below). |
+| **#37** | Submissions + clubs Drizzle schema | database | `projects.ts` is empty — just has an import, no tables. Need to define `submissions` and `clubs` tables. |
+| **#38** | Submission data access functions | database | Create helpers (create/get/update submissions) once schema exists. |
+| **#31** | Env vars documentation | infra | Create `.env.example` with all required vars (`DATABASE_URL`, `BETTER_AUTH_URL`, `HACKCLUB_CLIENT_ID`, `HACKCLUB_CLIENT_SECRET`, etc.) |
+
+### 🟡 Priority: Medium (Do next)
+
+| # | Issue | Type | What to do |
+|---|-------|------|------------|
+| **#36** | Error page | frontend | Create `/error-page` route (the auth config references `errorCallbackURL: "/error-page"` but no such route exists). Also a generic SvelteKit `+error.svelte`. |
+| **#26** | Admin review dashboard | full-stack | Build `/admin` route — list submissions, approve/reject. |
+| **#27** | Club leader dashboard | full-stack | Build `/club` route — view club members' submissions. |
+| **#30** | Cache Clubs API responses | backend | Cache leader checks in Postgres with a TTL. |
+| **#32** | Input validation on remote functions | backend | Add Valibot schemas to all `form()` / `query()` remote functions. |
+| **#39** | Seed clubs table from Clubs API | database | Script/endpoint to pull clubs into Postgres. |
+
+### 🟢 Priority: Low (Nice to have)
+
+| # | Issue | Type | What to do |
+|---|-------|------|------------|
+| **#33** | Rewards page | frontend | New route for viewing/spending earned hours. |
+| **#34** | Add Vitest | infra | Vitest is already in `devDependencies` but needs test config and actual tests. |
+| **#35** | Mobile nav (hamburger/bottom nav) | frontend | Sidebar is `display: none` on mobile — needs a mobile alternative. |
+
+---
+
+## 🐛 Bugs in Existing Code (Not captured in issues)
+
+I found several bugs you should fix right away:
+
+**1. Navbar logo is broken** — `src` is a raw string instead of an import, and "assests" is a typo:
+
+```clubatime/src/lib/components/navbar.svelte#L8-L12
+        <img
+            src="$lib/assests/flag-standalone.svg"
+            alt="A red flag with a brown base, and the words &quot;Hack Club&quot; in white inside the flag"
+            class="logo"
+        />
+```
+
+Should import the SVG and use the variable, and the folder is `assets` not `assests`.
+
+**2. Layout favicon `<link>` tag is malformed:**
+
+```clubatime/src/routes/+layout.svelte#L12
+    <link rel="icon href={favicon}" />
+```
+
+Should be `<link rel="icon" href={favicon} />` — the `href` got merged into the `rel` attribute.
+
+**3. CSS color typo in dark theme:**
+
+```clubatime/src/lib/styles/app.css#L62
+		--color-text: #e1e48e;
+```
+
+Under `[data-theme="dark"]`, this should be `#e1e4e8` (matching `:root`), not `#e1e48e` — the last two hex chars are swapped, giving a yellowish tint instead of light gray.
+
+**4. Broken SVG paths in Sidebar** — the Home icon path data is garbled:
+
+```clubatime/src/lib/components/sidebar.svelte#L30
+                    <path d="M3 919-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+```
+
+Should be `M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z`. And the My Club icon at line 86 is also broken:
+
+```clubatime/src/lib/components/sidebar.svelte#L86
+                            <path d="M23 21v-2a4 0 0 0-3-3.87" />
+```
+
+Should be `M23 21v-2a4 4 0 0 0-3-3.87` (missing the second `4`).
+
+**5. Home page typos:**
+
+```clubatime/src/routes/+page.svelte#L8-L13
+        <p class="subititle">Track your club hours and earn rewards</p>
+    ...
+            <p>Sucessfully signed in and ready to track</p>
+```
+
+`subititle` → `subtitle`, `Sucessfully` → `Successfully`.
+
+**6. Empty schema file** — `projects.ts` has an import but no tables:
+
+```clubatime/src/lib/server/db/schema/projects.ts#L1
+import { integer, pgTable, serial } from "drizzle-orm/pg-core";
+```
+
+This is essentially issue #37.
+
+**7. Missing routes** — `/submit`, `/hours`, `/club`, `/admin`, and `/error-page` are referenced in the UI and auth config but don't exist yet as routes.
+
+---
+
+## 🤖 Dependabot Setup
+
+There's no `.github` directory at all. Let me create the Dependabot config for you. Since you use **pnpm** (npm ecosystem) and may eventually add GitHub Actions, I'll cover both:
+
+**Tool Call: Find paths matching “`clubatime/.github/**/*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+## User
+
+what s the code i need. full file paths
+not relative, but full file paths, and names
+ and such
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Here's every file you need, with full paths. I'll go through them all.
+
+---
+
+## 1. Dependabot
+
+**New file:** `/home/end/Github/clubatime/.github/dependabot.yml`
+
+```clubatime/.github/dependabot.yml#L1-L20
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    groups:
+      storybook:
+        patterns:
+          - "@storybook/*"
+          - "@chromatic-com/*"
+          - "storybook"
+      svelte:
+        patterns:
+          - "svelte*"
+          - "@sveltejs/*"
+```
+
+---
+
+## 2. Fix Navbar (broken logo import + typo)
+
+**Existing file:** `/home/end/Github/clubatime/src/lib/components/navbar.svelte`
+
+```clubatime/src/lib/components/navbar.svelte#L1-L100
+<script lang="ts">
+import { getSession, signIn, signOut } from "$lib/auth.remote";
+import logo from "$lib/assets/flag-standalone.svg";
+
+const session = await getSession();
+</script>
+
+<nav>
+    <a href="/" class="brand">
+        <img
+            src={logo}
+            alt="A red flag with a brown base, and the words &quot;Hack Club&quot; in white inside the flag"
+            class="logo"
+        />
+        <span class="brand-text">Clubatime</span>
+    </a>
+
+    <div class="user-area">
+        {#if session?.user}
+            <span class="username">{session.user.name}</span>
+            <form {...signOut}>
+                <button type="submit" class="btn btn-secondary">Sign Out</button>
+            </form>
+        {:else}
+            <form {...signIn}>
+                <button type="submit" class="btn btn-primary">
+                    Sign in with Hack Club
+                </button>
+            </form>
+        {/if}
+    </div>
+</nav>
+
+<style>
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--navbar-height);
+        background: var(--color-bg-secondary);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        z-index: 100;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--color-text);
+        text-decoration: none;
+    }
+
+    .brand:hover {
+        text-decoration: none;
+    }
+
+    .logo {
+        height: 28px;
+        width: auto;
+    }
+
+    .brand-text {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .user-area {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .username {
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 8px 14px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: none;
+        transition: background var(--transition);
+    }
+
+    .btn-primary {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--color-primary-hover);
+    }
+
+    .btn-secondary {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+        background: var(--color-border);
+    }
+</style>
+```
+
+**Changes:** Line 3 adds `import logo from "$lib/assets/flag-standalone.svg";` and line 11 changes `src="$lib/assests/..."` to `src={logo}`.
+
+---
+
+## 3. Fix Layout (broken `<link>` tag)
+
+**Existing file:** `/home/end/Github/clubatime/src/routes/+layout.svelte`
+
+```clubatime/src/routes/+layout.svelte#L1-L48
+<script lang="ts">
+    import "$lib/styles/app.css";
+    import Navbar from "$lib/components/navbar.svelte";
+    import Sidebar from "$lib/components/sidebar.svelte";
+    import favicon from "$lib/assets/favicon.svg";
+
+    const { children } = $props();
+</script>
+
+<svelte:head>
+    <link rel="icon" href={favicon} />
+    <title>Clubatime</title>
+</svelte:head>
+
+<div class="app-layout">
+    <Navbar />
+    <div class="app-body">
+        <Sidebar />
+        <main class="app-main">
+            <div class="app-content">
+                {@render children()}
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .app-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .app-body {
+        display: flex;
+        flex: 1;
+        padding-top: var(--navbar-height);
+    }
+
+    .app-main {
+        flex: 1;
+        margin-left: var(--sidebar-width);
+    }
+
+    .app-content {
+        padding: 24px;
+        max-width: 1000px;
+    }
+
+    @media (max-width: 768px) {
+        .app-main {
+            margin-left: 0;
+        }
+
+        .app-content {
+            padding: 16px;
+        }
+    }
+</style>
+```
+
+**Changes:** Line 11 fixes `<link rel="icon" href={favicon} />` (was `rel="icon href={favicon}"`). Also restructured the layout wrapper so `app-body` wraps sidebar + main side-by-side, and `margin-left` is on `app-main` (not `app-content`) so the sidebar offset works correctly.
+
+---
+
+## 4. Fix CSS color typo
+
+**Existing file:** `/home/end/Github/clubatime/src/lib/styles/app.css`
+
+Only line 62 needs to change — `#e1e48e` → `#e1e4e8`:
+
+```clubatime/src/lib/styles/app.css#L57-L70
+[data-theme="dark"] {
+	--color-bg: #17171d;
+	--color-bg-secondary: #1f1f28;
+	--color-bg-tertiary: #252530;
+	--color-border: #33333d;
+	--color-text: #e1e4e8;
+	--color-text-secondary: #c6cbd1;
+	--color-text-muted: #8492a6;
+	color-scheme: dark;
+}
+```
+
+---
+
+## 5. Fix Sidebar (broken SVG paths)
+
+**Existing file:** `/home/end/Github/clubatime/src/lib/components/sidebar.svelte`
+
+```clubatime/src/lib/components/sidebar.svelte#L1-L137
+<script lang="ts">
+    import { page } from "$app/state";
+    import { getSession } from "$lib/auth.remote";
+
+    function isActive(path: string): boolean {
+        if (path === "/") {
+            return page.url.pathname === "/";
+        }
+        return page.url.pathname.startsWith(path);
+    }
+</script>
+
+<aside class="sidebar">
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <span class="nav-label">Menu</span>
+            <a href="/" class="nav-link" class:active={isActive("/")}>
+                <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Home
+            </a>
+            <a href="/hours" class="nav-link" class:active={isActive("/hours")}>
+                <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                My Hours
+            </a>
+            <a
+                href="/submit"
+                class="nav-link"
+                class:active={isActive("/submit")}
+            >
+                <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path
+                        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                    />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="18" x2="12" y2="12" />
+                    <line x1="9" y1="15" x2="15" y2="15" />
+                </svg>
+                Submit Project
+            </a>
+        </div>
+
+        {#await getSession() then session}
+            {#if session?.user}
+                <div class="nav-section">
+                    <span class="nav-label">Club</span>
+                    <a
+                        href="/club"
+                        class="nav-link"
+                        class:active={isActive("/club")}
+                    >
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path
+                                d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                            />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        My Club
+                    </a>
+                    <a
+                        href="/admin"
+                        class="nav-link"
+                        class:active={isActive("/admin")}
+                    >
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                            />
+                        </svg>
+                        Admin
+                    </a>
+                </div>
+            {/if}
+        {/await}
+    </nav>
+</aside>
+
+<style>
+    .sidebar {
+        position: fixed;
+        top: var(--navbar-height);
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--color-bg-secondary);
+        border-right: 1px solid var(--color-border);
+        padding: 16px 0;
+        overflow-y: auto;
+        z-index: 90;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            display: none;
+        }
+    }
+
+    .nav-section {
+        padding: 0 12px;
+        margin-bottom: 16px;
+    }
+
+    .nav-label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        padding: 8px 12px 4px;
+        letter-spacing: 0.05em;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: var(--radius);
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: background var(--transition), color var(--transition);
+    }
+
+    .nav-link:hover {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text);
+        text-decoration: none;
+    }
+
+    .nav-link.active {
+        background: var(--color-bg-tertiary);
+        color: var(--color-primary);
+        font-weight: 500;
+    }
+</style>
+```
+
+**Changes:** Fixed SVG `d` paths (lines 27, 42–43, 95), fixed `>Menu` label to `Menu`, added missing `height="18"` on Home icon, replaced the duplicate house icon for "My Hours" with a proper clock icon, fixed the submit icon polyline, added proper styling for `.nav-link` (gap, padding, hover, active), changed sidebar background from `var(--color-border)` to `var(--color-bg-secondary)` with a `border-right`.
+
+---
+
+## 6. Fix Home Page (typos)
+
+**Existing file:** `/home/end/Github/clubatime/src/routes/+page.svelte`
+
+```clubatime/src/routes/+page.svelte#L1-L27
+<script lang="ts">
+import { getSession } from "$lib/auth.remote";
+
+const session = await getSession();
+</script>
+
+<div class="page">
+    <header class="page-header">
+        <h1>Welcome to Clubatime</h1>
+        <p class="subtitle">Track your club hours and earn rewards</p>
+    </header>
+
+    {#if session?.user}
+        <div class="card">
+            <h2>Hey, {session.user.name}!</h2>
+            <p>Successfully signed in and ready to track</p>
+            <div class="card-actions">
+                <a href="/submit" class="btn btn-primary">Submit a Project</a>
+                <a href="/hours" class="btn btn-secondary">View My Hours</a>
+            </div>
+        </div>
+    {:else}
+        <div class="card">
+            <h2>Get Started</h2>
+            <p>Sign in with your Hack Club account</p>
+        </div>
+    {/if}
+</div>
+```
+
+**Changes:** `page.header` → `page-header`, `subititle` → `subtitle`, `Sucessfully` → `Successfully`, removed the stray "Loading..." card that rendered for everyone.
+
+---
+
+## 7. Placeholder routes (new files)
+
+**New file:** `/home/end/Github/clubatime/src/routes/hours/+page.svelte`
+
+```clubatime/src/routes/hours/+page.svelte#L1-L19
+<script lang="ts">
+import { getSession } from "$lib/auth.remote";
+
+const session = await getSession();
+</script>
+
+<div class="page">
+    <h1>My Hours</h1>
+    {#if session?.user}
+        <p>No submissions yet. <a href="/submit">Submit a project</a> to start tracking hours.</p>
+    {:else}
+        <p>Sign in to view your hours.</p>
+    {/if}
+</div>
+```
+
+**New file:** `/home/end/Github/clubatime/src/routes/submit/+page.svelte`
+
+```clubatime/src/routes/submit/+page.svelte#L1-L19
+<script lang="ts">
+import { getSession } from "$lib/auth.remote";
+
+const session = await getSession();
+</script>
+
+<div class="page">
+    <h1>Submit a Project</h1>
+    {#if session?.user}
+        <p>Submission form coming soon.</p>
+    {:else}
+        <p>Sign in to submit a project.</p>
+    {/if}
+</div>
+```
+
+**New file:** `/home/end/Github/clubatime/src/routes/club/+page.svelte`
+
+```clubatime/src/routes/club/+page.svelte#L1-L19
+<script lang="ts">
+import { getSession } from "$lib/auth.remote";
+
+const session = await getSession();
+</script>
+
+<div class="page">
+    <h1>My Club</h1>
+    {#if session?.user}
+        <p>Club dashboard coming soon.</p>
+    {:else}
+        <p>Sign in to view your club.</p>
+    {/if}
+</div>
+```
+
+**New file:** `/home/end/Github/clubatime/src/routes/admin/+page.svelte`
+
+```clubatime/src/routes/admin/+page.svelte#L1-L19
+<script lang="ts">
+import { getSession } from "$lib/auth.remote";
+
+const session = await getSession();
+</script>
+
+<div class="page">
+    <h1>Admin Dashboard</h1>
+    {#if session?.user}
+        <p>Admin review dashboard coming soon.</p>
+    {:else}
+        <p>Sign in to access admin tools.</p>
+    {/if}
+</div>
+```
+
+**New file:** `/home/end/Github/clubatime/src/routes/error-page/+page.svelte`
+
+```clubatime/src/routes/error-page/+page.svelte#L1-L13
+<script lang="ts">
+    import { page } from "$app/state";
+</script>
+
+<div class="page">
+    <h1>Something went wrong</h1>
+    {#if page.url.searchParams.get("error")}
+        <p class="error">{page.url.searchParams.get("error")}</p>
+    {:else}
+        <p>An unexpected error occurred. Please try again or <a href="/">go home</a>.</p>
+    {/if}
+    <a href="/" class="btn btn-primary">Back to Home</a>
+</div>
+```
+
+---
+
+## 8. Drizzle schema for submissions + clubs (#37)
+
+**Existing file (replace):** `/home/end/Github/clubatime/src/lib/server/db/schema/projects.ts`
+
+```clubatime/src/lib/server/db/schema/projects.ts#L1-L77
+import { relations } from "drizzle-orm";
+import {
+	integer,
+	pgEnum,
+	pgTable,
+	serial,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
+import { user } from "./auth";
+
+export const submissionStatusEnum = pgEnum("submission_status", [
+	"draft",
+	"pending",
+	"approved",
+	"rejected",
+]);
+
+export const clubs = pgTable("clubs", {
+	id: serial("id").primaryKey(),
+	name: text("name").notNull().unique(),
+	slug: text("slug").notNull().unique(),
+	description: text("description"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at")
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull(),
+});
+
+export const submissions = pgTable("submissions", {
+	id: serial("id").primaryKey(),
+	userId: text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	clubId: integer("club_id").references(() => clubs.id, {
+		onDelete: "set null",
+	}),
+	title: text("title").notNull(),
+	description: text("description").notNull(),
+	repoUrl: text("repo_url"),
+	demoUrl: text("demo_url"),
+	screenshotUrl: text("screenshot_url"),
+	hoursSpent: integer("hours_spent").notNull(),
+	status: submissionStatusEnum("status").default("pending").notNull(),
+	reviewNote: text("review_note"),
+	reviewedBy: text("reviewed_by").references(() => user.id, {
+		onDelete: "set null",
+	}),
+	reviewedAt: timestamp("reviewed_at"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at")
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull(),
+});
+
+export const clubsRelations = relations(clubs, ({ many }) => ({
+	submissions: many(submissions),
+}));
+
+export const submissionsRelations = relations(submissions, ({ one }) => ({
+	user: one(user, {
+		fields: [submissions.userId],
+		references: [user.id],
+	}),
+	club: one(clubs, {
+		fields: [submissions.clubId],
+		references: [clubs.id],
+	}),
+	reviewer: one(user, {
+		fields: [submissions.reviewedBy],
+		references: [user.id],
+		relationName: "reviewer",
+	}),
+}));
+```
+
+---
+
+## 9. Env vars documentation (#31)
+
+**New file:** `/home/end/Github/clubatime/.env.example`
+
+```clubatime/.env.example#L1-L18
+# Database (Postgres connection string)
+DATABASE_URL=postgresql://user:password@localhost:5432/clubatime
+
+# Better Auth
+BETTER_AUTH_URL=http://localhost:5173
+
+# Hack Club OAuth (OIDC)
+HACKCLUB_CLIENT_ID=
+HACKCLUB_CLIENT_SECRET=
+
+# HC CDN (for file uploads)
+# POST https://cdn.hackclub.com/api/v3/new
+HC_CDN_API_KEY=
+
+# Clubs API
+# https://clubapi.hackclub.com
+CLUBS_API_KEY=
+```
+
+---
+
+## Summary of all files
+
+| Action | Full Path |
+|--------|-----------|
+| **Create** | `/home/end/Github/clubatime/.github/dependabot.yml` |
+| **Create** | `/home/end/Github/clubatime/.env.example` |
+| **Edit** | `/home/end/Github/clubatime/src/lib/components/navbar.svelte` |
+| **Edit** | `/home/end/Github/clubatime/src/routes/+layout.svelte` |
+| **Edit** | `/home/end/Github/clubatime/src/lib/styles/app.css` (line 62 only) |
+| **Edit** | `/home/end/Github/clubatime/src/lib/components/sidebar.svelte` |
+| **Edit** | `/home/end/Github/clubatime/src/routes/+page.svelte` |
+| **Replace** | `/home/end/Github/clubatime/src/lib/server/db/schema/projects.ts` |
+| **Create** | `/home/end/Github/clubatime/src/routes/hours/+page.svelte` |
+| **Create** | `/home/end/Github/clubatime/src/routes/submit/+page.svelte` |
+| **Create** | `/home/end/Github/clubatime/src/routes/club/+page.svelte` |
+| **Create** | `/home/end/Github/clubatime/src/routes/admin/+page.svelte` |
+| **Create** | `/home/end/Github/clubatime/src/routes/error-page/+page.svelte` |
+
+After you apply these, you'll have all the bug fixes resolved, Dependabot enabled, placeholder routes for every link in the sidebar, a proper Drizzle schema for submissions/clubs, and an `.env.example` for contributors. Then run `pnpm db:generate` and `pnpm db:push` to apply the new schema to your database.
+
+## User
+
+assign me to the issues im going to fix
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+I don't have a terminal tool available right now to run `gh` commands, but the issues the code above directly fixes are **#11, #31, #36, and #37**. Here are the commands to run yourself — just paste this block:
+
+```/dev/null/assign.sh#L1-L4
+gh issue edit 11 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 31 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 36 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 37 --add-assignee @me --repo hackclub/clubatime
+```
+
+That maps to:
+
+| Issue | What your code fixes |
+|-------|---------------------|
+| **#11** | Layout wiring, navbar logo import fix, sidebar SVG fixes, CSS color typo, layout structure |
+| **#31** | `.env.example` with all required env vars |
+| **#36** | `/error-page` route (referenced by auth `errorCallbackURL` but didn't exist) |
+| **#37** | Full Drizzle schema for `submissions` + `clubs` tables in `projects.ts` |
+
+The placeholder pages for `/hours`, `/submit`, `/club`, `/admin` are a *start* toward issues #25, #24, #26, and #27 — but those issues call for full functional pages, not just placeholders, so I wouldn't assign yourself to those yet unless you're planning to build them out now.
+
+## User
+
+gunna do full frotnend stuff
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Got it — you're taking on all the frontend. Here's every issue with a `frontend` label, plus the infra/db ones your code already covers:
+
+```/dev/null/assign-all.sh#L1-L8
+gh issue edit 11 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 26 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 27 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 33 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 35 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 36 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 31 --add-assignee @me --repo hackclub/clubatime
+gh issue edit 37 --add-assignee @me --repo hackclub/clubatime
+```
+
+| Issue | Label | What |
+|-------|-------|------|
+| **#11** | frontend · high | Wire up layout, navbar, sidebar |
+| **#36** | frontend · medium | Error page |
+| **#26** | frontend + backend · medium | Admin review dashboard UI |
+| **#27** | frontend + backend · medium | Club leader dashboard UI |
+| **#33** | frontend · low | Rewards page |
+| **#35** | frontend · low | Mobile nav (hamburger / bottom nav) |
+| **#31** | infrastructure · high | `.env.example` |
+| **#37** | database · high | Submissions + clubs Drizzle schema |
+
+That leaves **#30, #32, #38, #39** (pure backend) and **#34** (vitest) unassigned for someone else to pick up.
+
+## User
+
+fix funding
+
+**Tool Call: Find paths matching “`clubatime/**/FUNDING*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/.github/**/*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [
+    "/home/end/Github/clubatime/.github",
+    "/home/end/Github/clubatime/.github/dependabot.yml"
+  ],
+  "all_matches_len": 2
+}
+```
+

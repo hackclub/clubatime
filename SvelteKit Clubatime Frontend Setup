@@ -1,0 +1,3153 @@
+## User
+
+[@SvelteKit clubatime frontend setup](zed:///agent/thread/86fec56d-ca1b-434f-9e88-41467bbce25b?name=SvelteKit+clubatime+frontend+setup)
+What do i still need to do? list everything
+
+## Assistant
+
+
+
+Let me explore the current state of your project to see what's already been implemented and what's still missing.
+
+**Tool Call: List the `clubatime` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/.github
+clubatime/.storybook
+clubatime/.svelte-kit
+clubatime/drizzle
+clubatime/node_modules
+clubatime/src
+clubatime/static
+
+# Files:
+clubatime/.gitignore
+clubatime/.npmrc
+clubatime/README.md
+clubatime/biome.json
+clubatime/bun.lock
+clubatime/devenv.lock
+clubatime/devenv.nix
+clubatime/devenv.yaml
+clubatime/drizzle.config.ts
+clubatime/package.json
+clubatime/pnpm-lock.yaml
+clubatime/pnpm-workspace.yaml
+clubatime/svelte.config.js
+clubatime/tsconfig.json
+clubatime/vite.config.ts
+clubatime/vitest.shims.d.ts
+
+
+**Tool Call: List the `clubatime/src` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib
+clubatime/src/routes
+
+# Files:
+clubatime/src/app.d.ts
+clubatime/src/app.html
+clubatime/src/hooks.server.ts
+
+
+**Tool Call: Read file `package.json`**
+Status: Completed
+
+```json
+{
+  "Text": "{\n\t\"name\": \"clubatime\",\n\t\"private\": true,\n\t\"version\": \"0.0.1\",\n\t\"type\": \"module\",\n\t\"scripts\": {\n\t\t\"dev\": \"vite dev\",\n\t\t\"build\": \"vite build\",\n\t\t\"preview\": \"vite preview\",\n\t\t\"prepare\": \"svelte-kit sync || echo ''\",\n\t\t\"check\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && biome check\",\n\t\t\"check:watch\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch\",\n\t\t\"format\": \"biome check --write\",\n\t\t\"db:push\": \"drizzle-kit push\",\n\t\t\"db:generate\": \"drizzle-kit generate\",\n\t\t\"db:migrate\": \"drizzle-kit migrate\",\n\t\t\"db:studio\": \"drizzle-kit studio\",\n\t\t\"storybook\": \"storybook dev -p 6006\",\n\t\t\"build-storybook\": \"storybook build\"\n\t},\n\t\"devDependencies\": {\n\t\t\"@biomejs/biome\": \"2.3.8\",\n\t\t\"@chromatic-com/storybook\": \"^4.1.3\",\n\t\t\"@storybook/addon-a11y\": \"^10.1.7\",\n\t\t\"@storybook/addon-docs\": \"^10.1.7\",\n\t\t\"@storybook/addon-svelte-csf\": \"^5.0.10\",\n\t\t\"@storybook/addon-vitest\": \"^10.1.7\",\n\t\t\"@storybook/sveltekit\": \"^10.1.7\",\n\t\t\"@sveltejs/adapter-auto\": \"^7.0.0\",\n\t\t\"@sveltejs/kit\": \"^2.48.5\",\n\t\t\"@sveltejs/vite-plugin-svelte\": \"^6.2.1\",\n\t\t\"@types/node\": \"^22\",\n\t\t\"@vitest/browser-playwright\": \"^4.0.15\",\n\t\t\"@vitest/coverage-v8\": \"^4.0.15\",\n\t\t\"drizzle-kit\": \"^0.31.7\",\n\t\t\"drizzle-orm\": \"^0.44.7\",\n\t\t\"playwright\": \"^1.57.0\",\n\t\t\"storybook\": \"^10.1.7\",\n\t\t\"svelte\": \"^5.43.8\",\n\t\t\"svelte-check\": \"^4.3.4\",\n\t\t\"typescript\": \"^5.9.3\",\n\t\t\"vite\": \"^7.2.2\",\n\t\t\"vite-plugin-devtools-json\": \"^1.0.0\",\n\t\t\"vitest\": \"^4.0.15\"\n\t},\n\t\"dependencies\": {\n\t\t\"better-auth\": \"^1.4.5\",\n\t\t\"postgres\": \"^3.4.7\"\n\t},\n\t\"packageManager\": \"pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6\"\n}\n"
+}
+```
+
+**Tool Call: List the `clubatime/drizzle` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/drizzle/meta
+
+# Files:
+clubatime/drizzle/0000_sharp_maggott.sql
+clubatime/drizzle/0001_pink_annihilus.sql
+
+
+**Tool Call: List the `clubatime/src/lib` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib/assets
+clubatime/src/lib/components
+clubatime/src/lib/server
+clubatime/src/lib/styles
+
+# Files:
+clubatime/src/lib/auth.remote.ts
+clubatime/src/lib/index.ts
+
+
+**Tool Call: Read file `src/hooks.server.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import type { Handle } from \"@sveltejs/kit\";\nimport { svelteKitHandler } from \"better-auth/svelte-kit\";\nimport { building } from \"$app/environment\";\nimport { auth } from \"$lib/server/auth\";\n\nexport const handle: Handle = async ({ event, resolve }) => {\n\t// Fetch current session from Better Auth\n\tconst session = await auth.api.getSession({\n\t\theaders: event.request.headers,\n\t});\n\n\t// Make session and user available on server\n\tif (session) {\n\t\tevent.locals.session = session.session;\n\t\tevent.locals.user = session.user;\n\t}\n\n\treturn svelteKitHandler({ event, resolve, auth, building });\n};\n"
+}
+```
+
+**Tool Call: List the `clubatime/src/routes` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/routes/hours
+
+# Files:
+clubatime/src/routes/+layout.svelte
+clubatime/src/routes/+page.svelte
+
+
+**Tool Call: List the `clubatime/src/lib/server` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib/server/db
+
+# Files:
+clubatime/src/lib/server/airtable.ts
+clubatime/src/lib/server/auth.ts
+
+
+**Tool Call: List the `clubatime/src/lib/styles` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/styles/app.css
+
+
+**Tool Call: List the `clubatime/src/lib/components` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/components/navbar.svelte
+clubatime/src/lib/components/sidebar.svelte
+
+
+**Tool Call: List the `clubatime/src/routes/hours` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/routes/hours/+page.svelte
+
+
+**Tool Call: Read file `src/lib/auth.remote.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { redirect } from \"@sveltejs/kit\";\nimport { form, getRequestEvent, query } from \"$app/server\";\nimport { auth } from \"./server/auth\";\n\nexport const getSession = query(\n\tasync () =>\n\t\tawait auth.api.getSession({\n\t\t\theaders: getRequestEvent().request.headers,\n\t\t}),\n);\n\nexport const signIn = form(async () => {\n\tconst data = await auth.api.signInWithOAuth2({\n\t\tbody: {\n\t\t\tproviderId: \"hackclub\",\n\t\t\tcallbackURL: \"/\",\n\t\t\terrorCallbackURL: \"/error-page\",\n\t\t},\n\t\theaders: getRequestEvent().request.headers,\n\t});\n\n\tif (data.redirect) {\n\t\tredirect(303, data.url);\n\t}\n\n\tawait getSession().refresh();\n});\n\nexport const signOut = form(async () => {\n\tconst { success } = await auth.api.signOut({\n\t\theaders: getRequestEvent().request.headers,\n\t});\n\n\tif (success) {\n\t\tgetSession().set(null);\n\t}\n});\n"
+}
+```
+
+**Tool Call: List the `clubatime/src/lib/assets` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/assets/favicon.svg
+clubatime/src/lib/assets/flag-standalone.svg
+
+
+**Tool Call: List the `clubatime/src/lib/server/db` directory's contents**
+Status: Completed
+
+# Folders:
+clubatime/src/lib/server/db/schema
+
+# Files:
+clubatime/src/lib/server/db/index.ts
+
+
+**Tool Call: Read file `src/routes/+layout.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import \"$lib/styles/app.css\";\n    import Navbar from \"$lib/components/navbar.svelte\";\n    import Sidebar from \"$lib/components/sidebar.svelte\";\n    import favicon from \"$lib/assets/favicon.svg\";\n\n    const { children } = $props();\n</script>\n\n<svelte:head>\n    <link rel=\"icon\" href={favicon} />\n    <title>Clubatime</title>\n</svelte:head>\n\n<div class=\"app-layout\">\n    <Navbar />\n    <Sidebar />\n    <main class=\"app-main\">\n        <div class=\"app-content\">\n            {@render children()}\n        </div>\n    </main>\n</div>\n\n<style>\n    .app-layout {\n        display: flex;\n        flex-direction: column;\n        min-height: 100vh;\n    }\n\n    .app-body {\n        display: flex;\n        flex: 1;\n        padding-top: var(--navbar-height);\n    }\n\n    .app-main {\n        display: flex;\n        flex-direction: column;\n        min-height: 100vh;\n    }\n\n    .app-content {\n        flex: 1;\n        padding: 24px;\n        margin-left: var(--navbar-height);\n        max-width: 1000px;\n    }\n\n    @media (max-width: 768px) {\n        .app-content {\n            margin-left: 0;\n            padding: 16px;\n        }\n\n        .app-content {\n            padding: 16px;\n        }\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/auth.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { drizzleAdapter } from \"better-auth/adapters/drizzle\";\nimport { betterAuth } from \"better-auth/minimal\";\nimport { genericOAuth } from \"better-auth/plugins\";\nimport { sveltekitCookies } from \"better-auth/svelte-kit\";\nimport { getRequestEvent } from \"$app/server\";\nimport { env } from \"$env/dynamic/private\";\nimport { db } from \"./db\";\n\nexport const auth = betterAuth({\n\tdatabase: drizzleAdapter(db, {\n\t\tprovider: \"pg\",\n\t}),\n\tbaseURL: env.BETTER_AUTH_URL,\n\texperimental: {\n\t\tjoins: true,\n\t},\n\tplugins: [\n\t\tgenericOAuth({\n\t\t\tconfig: [\n\t\t\t\t{\n\t\t\t\t\tproviderId: \"hackclub\",\n\t\t\t\t\tclientId: env.HACKCLUB_CLIENT_ID,\n\t\t\t\t\tclientSecret: env.HACKCLUB_CLIENT_SECRET,\n\t\t\t\t\tdiscoveryUrl:\n\t\t\t\t\t\t\"https://auth.hackclub.com/.well-known/openid-configuration\",\n\t\t\t\t\tscopes: [\"openid\", \"profile\", \"email\", \"name\", \"verification_status\"],\n\t\t\t\t},\n\t\t\t],\n\t\t}),\n\t\tsveltekitCookies(getRequestEvent),\n\t],\n\tsession: {\n\t\tcookieCache: {\n\t\t\tenabled: true,\n\t\t\tmaxAge: 5 * 60, // 5 minutes (maxAge is in seconds)\n\t\t},\n\t},\n});\n\nexport type ServerSession = typeof auth.$Infer.Session.session;\nexport type ServerUser = typeof auth.$Infer.Session.user;\n"
+}
+```
+
+**Tool Call: Read file `src/routes/hours/+page.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { getSession } from \"$lib/auth.remote\";\n\n    const session = await getSession();\n</script>\n\n<div class=\"page-header\">\n    <header class\n</div>\n"
+}
+```
+
+**Tool Call: Read file `src/routes/+page.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { getSession } from \"$lib/auth.remote\";\n\n    const session = await getSession();\n</script>\n\n<div class=\"page\">\n    <header class=\"page-header\">\n        <h1>Welcome to Clubatime</h1>\n        <p class=\"subtitle\">Track your club hours and earn rewards</p>\n    </header>\n\n    {#if session?.user}\n        <div class=\"card\">\n            <h2>Hey, {session.user.name}!</h2>\n            <p>Successfully signed in and ready to track</p>\n            <div class=\"card-actions\">\n                <a href=\"/submit\" class=\"btn btn-primary\">Submit a Project</a>\n                <a href=\"/hours\" class=\"btn btn-secondary\">View My Hours</a>\n            </div>\n        </div>\n    {:else}\n        <div class=\"card\">\n            <h2>Get Started</h2>\n            <p>Sign in with your Hack Club account</p>\n        </div>\n    {/if}\n</div>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/airtable.ts`**
+Status: Completed
+
+```json
+{
+  "Text": ""
+}
+```
+
+**Tool Call: List the `clubatime/src/lib/server/db/schema` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/src/lib/server/db/schema/auth.ts
+clubatime/src/lib/server/db/schema/projects.ts
+
+
+**Tool Call: Read file `src/lib/components/sidebar.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { page } from \"$app/state\";\n    import { getSession } from \"$lib/auth.remote\";\n\n    function isActive(path: string): boolean {\n        if (path === \"/\") {\n            return page.url.pathname === \"/\";\n        }\n        return page.url.pathname.startsWith(path);\n    }\n</script>\n\n<aside class=\"sidebar\">\n    <nav class=\"sidebar-nav\">\n        <div class=\"nav-section\">\n            <span class=\"nav-label\">Menu</span>\n            <a href=\"/\" class=\"nav-link\" class:active={isActive(\"/\")}>\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />\n                    <polyline points=\"9 22 9 12 15 12 15 22\" />\n                </svg>\n                Home\n            </a>\n            <a href=\"/hours\" class=\"nav-link\" class:active={isActive(\"/hours\")}>\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <circle cx=\"12\" cy=\"12\" r=\"10\" />\n                    <polyline points=\"12 6 12 12 16 14\" />\n                </svg>\n                My Hours\n            </a>\n            <a\n                href=\"/submit\"\n                class=\"nav-link\"\n                class:active={isActive(\"/submit\")}\n            >\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <path\n                        d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"\n                    />\n                    <polyline points=\"14 2 14 8 20 8\" />\n                    <line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"12\" />\n                    <line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\" />\n                </svg>\n                Submit Project\n            </a>\n        </div>\n\n        {#await getSession() then session}\n            {#if session?.user}\n                <div class=\"nav-section\">\n                    <span class=\"nav-label\">Club</span>\n                    <a\n                        href=\"/club\"\n                        class=\"nav-link\"\n                        class:active={isActive(\"/club\")}\n                    >\n                        <svg\n                            width=\"18\"\n                            height=\"18\"\n                            viewBox=\"0 0 24 24\"\n                            fill=\"none\"\n                            stroke=\"currentColor\"\n                            stroke-width=\"2\"\n                        >\n                            <path\n                                d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"\n                            />\n                            <circle cx=\"9\" cy=\"7\" r=\"4\" />\n                            <path d=\"M23 21v-2a4 4 0 0 0-3-3.87\" />\n                            <path d=\"M16 3.13a4 4 0 0 1 0 7.75\" />\n                        </svg>\n                        My Club\n                    </a>\n                    <a\n                        href=\"/admin\"\n                        class=\"nav-link\"\n                        class:active={isActive(\"/admin\")}\n                    >\n                        <svg\n                            width=\"18\"\n                            height=\"18\"\n                            viewBox=\"0 0 24 24\"\n                            fill=\"none\"\n                            stroke=\"currentColor\"\n                            stroke-width=\"2\"\n                        >\n                            <circle cx=\"12\" cy=\"12\" r=\"3\" />\n                            <path\n                                d=\"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z\"\n                            />\n                        </svg>\n                        Admin\n                    </a>\n                </div>\n            {/if}\n        {/await}\n    </nav>\n</aside>\n\n<style>\n    .sidebar {\n        position: fixed;\n        top: var(--navbar-height);\n        left: 0;\n        bottom: 0;\n        width: var(--sidebar-width);\n        background: var(--color-bg-secondary);\n        border-right: 1px solid var(--color-border);\n        padding: 16px 0;\n        overflow-y: auto;\n        z-index: 90;\n    }\n\n    @media (max-width: 768px) {\n        .sidebar {\n            display: none;\n        }\n    }\n\n    .nav-section {\n        padding: 0 12px;\n        margin-bottom: 16px;\n    }\n\n    .nav-label {\n        display: block;\n        font-size: 0.7rem;\n        text-transform: uppercase;\n        color: var(--color-text-muted);\n        padding: 8px 12px 4px;\n        letter-spacing: 0.05em;\n    }\n\n    .nav-link {\n        display: flex;\n        align-items: center;\n        gap: 10px;\n        padding: 8px 12px;\n        border-radius: var(--radius);\n        color: var(--color-text-muted);\n        text-decoration: none;\n        font-size: 0.9rem;\n        transition:\n            background var(--transition),\n            color var(--transition);\n    }\n\n    .nav-link:hover {\n        background: var(--color-bg-tertiary);\n        color: var(--color-text);\n        text-decoration: none;\n    }\n\n    .nav-link.active {\n        background: var(--color-bg-tertiary);\n        color: var(--color-primary);\n        font-weight: 500;\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/index.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { drizzle } from \"drizzle-orm/postgres-js\";\nimport postgres from \"postgres\";\nimport { env } from \"$env/dynamic/private\";\nimport * as authSchema from \"./schema/auth\";\nimport * as projectsSchema from \"./schema/projects\";\n\nif (!env.DATABASE_URL) throw new Error(\"DATABASE_URL is not set\");\n\nconst client = postgres(env.DATABASE_URL);\n\nexport const db = drizzle(client, {\n\tschema: { ...projectsSchema, ...authSchema },\n});\n"
+}
+```
+
+**Tool Call: Read file `src/app.d.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "// See https://svelte.dev/docs/kit/types#app.d.ts\n\nimport type { ServerSession, ServerUser } from \"$lib/server/auth\";\n\n// for information about these interfaces, see https://svelte.dev/docs/kit/types#app.d.ts\ndeclare global {\n\tnamespace App {\n\t\t// interface Error {}\n\t\tinterface Locals {\n\t\t\tsession?: ServerSession;\n\t\t\tuser?: ServerUser;\n\t\t}\n\t\t// interface PageData {}\n\t\t// interface PageState {}\n\t\t// interface Platform {}\n\t}\n}\n"
+}
+```
+
+**Tool Call: Read file `src/lib/styles/app.css`**
+Status: Completed
+
+```json
+{
+  "Text": ":root {\n    --hc-red: #ec3750;\n    --hc-orange: #ff8c37;\n    --hc-yellow: #f1c40f;\n    --hc-green: #33d6a6;\n    --hc-cyan: #5bc0de;\n    --hc-blue: #338eda;\n    --hc-purple: #a633d6;\n    --hc-muted: #8492a6; /* for disabled/muted text/states */\n\n    --sidebar-width: 220px;\n    --navbar-height: 52px;\n    --radius: 4px;\n    --transition: 120ms ease;\n\n    /* dark mode themeing */\n    --color-bg: #17171d;\n    --color-bg-secondary: #1f1f28;\n    --color-bg-tertiary: #252530;\n    --color-border: #33333d;\n    --color-text: #e1e4e8;\n    --color-text-muted: #8492a6;\n\n    --color-primary: var(--hc-red);\n    --color-primary-hover: #d63045;\n    --color-success: var(--hc-green);\n    --color-warning: var(--hc-yellow);\n    --color-error: var(--hc-red);\n\n    color-scheme: dark;\n}\n\n@media (prefers-color-scheme: light) {\n    :root {\n        --color-bg: #ffffff;\n        --color-bg-secondary: #f9fafb;\n        --color-bg-tertiary: #f1f3f5;\n        --color-border: #e1e4e8;\n        --color-text: #1f2d3d;\n        --color-text-muted: #8492a6;\n\n        color-scheme: light;\n    }\n}\n\n[data-theme=\"dark\"] {\n    --color-bg: #17171d;\n    --color-bg-secondary: #1f1f28;\n    --color-bg-tertiary: #252530;\n    --color-border: #33333d;\n    --color-text: #e1e4e8;\n    --color-text-secondary: #c6cbd1;\n    --color-text-muted: #8492a6;\n    color-scheme: dark;\n}\n\n[data-theme=\"light\"] {\n    --color-bg: #ffffff;\n    --color-bg-secondary: #f9fafb;\n    --color-bg-tertiary: #f1f3f5;\n    --color-border: #e1e4e8;\n    --color-text: #1f2d3d;\n    --color-text-secondary: #8492a6;\n    --color-text-muted: #8492a6;\n    color-scheme: light;\n}\n\n*,\n*::before,\n*::after {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n}\n\nhtml,\nbody {\n    height: 100%;\n    font-family:\n        \"monospace\",\n        system-ui,\n        -apple-system,\n        BlinkMacSystemFont,\n        \"Segoe UI\",\n        Roboto,\n        Oxygen,\n        Ubuntu,\n        Cantarell,\n        \"Open Sans\",\n        \"Helvetica Neue\",\n        sans-serif;\n    background-color: var(--color-bg);\n    color: var(--color-text);\n    line-height: 1.5;\n    -webkit-font-smoothing: antialiased;\n}\n\na {\n    color: var(--color-primary);\n    text-decoration: none;\n}\n\na:hover {\n    text-decoration: underline;\n}\n\nbutton {\n    font-family: inherit;\n    font-size: inherit;\n    cursor: pointer;\n}\n\n.visually-hidden {\n    position: absolute;\n    width: 1px;\n    height: 1px;\n    padding: 0;\n    margin: -1px;\n    overflow: hidden;\n    clip: rect(0, 0, 0, 0);\n    white-space: nowrap;\n    border-width: 0;\n}\n"
+}
+```
+
+**Tool Call: Read file `src/lib/components/navbar.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { getSession, signIn, signOut } from \"$lib/auth.remote\";\n    import logo from \"$lib/assets/flag-standalone.svg\";\n\n    const session = await getSession();\n</script>\n\n<nav>\n    <a href=\"/\" class=\"brand\">\n        <img\n            src={logo}\n            alt=\"A red flag with a brown base, and the words &quot;Hack Club&quot; in white inside the flag\"\n            class=\"logo\"\n        />\n        <span class=\"brand-text\">Clubatime</span>\n    </a>\n\n    <div class=\"user-area\">\n        {#if session?.user}\n            <span class=\"username\">{session.user.name}</span>\n            <form {...signOut}>\n                <button type=\"submit\" class=\"btn btn-secondary\">Sign Out</button\n                >\n            </form>\n        {:else}\n            <form {...signIn}>\n                <button type=\"submit\" class=\"btn btn-primary\">\n                    Sign in with Hack Club\n                </button>\n            </form>\n        {/if}\n    </div>\n</nav>\n\n<style>\n    nav {\n        position: fixed;\n        top: 0;\n        left: 0;\n        right: 0;\n        height: var(--navbar-height);\n        background: var(--color-bg-secondary);\n        border-bottom: 1px solid var(--color-border);\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: 0 16px;\n        z-index: 100;\n    }\n\n    .brand {\n        display: flex;\n        align-items: center;\n        gap: 10px;\n        color: var(--color-text);\n        text-decoration: none;\n    }\n\n    .brand:hover {\n        text-decoration: none;\n    }\n\n    .logo {\n        height: 28px;\n        width: auto;\n    }\n\n    .brand-text {\n        font-weight: 600;\n        font-size: 1.1rem;\n    }\n\n    .user-area {\n        display: flex;\n        align-items: center;\n        gap: 12px;\n    }\n\n    .username {\n        color: var(--color-text-muted);\n        font-size: 0.9rem;\n    }\n\n    .btn {\n        padding: 8px 14px;\n        border-radius: var(--radius);\n        font-weight: 500;\n        font-size: 0.9rem;\n        border: none;\n        transition: background var(--transition);\n    }\n\n    .btn-primary {\n        background: var(--color-primary);\n        color: white;\n    }\n\n    .btn-primary:hover {\n        background: var(--color-primary-hover);\n    }\n\n    .btn-secondary {\n        background: var(--color-bg-tertiary);\n        color: var(--color-text);\n        border: 1px solid var(--color-border);\n    }\n\n    .btn-secondary:hover {\n        background: var(--color-border);\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/schema/auth.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { relations } from \"drizzle-orm\";\nimport { boolean, index, pgTable, text, timestamp } from \"drizzle-orm/pg-core\";\n\nexport const user = pgTable(\n\t\"user\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\tname: text(\"name\").notNull(),\n\t\temail: text(\"email\").notNull().unique(),\n\t\temailVerified: boolean(\"email_verified\").default(false).notNull(),\n\t\timage: text(\"image\"),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.defaultNow()\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"user_email_idx\").on(table.email)],\n);\n\nexport const session = pgTable(\n\t\"session\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\texpiresAt: timestamp(\"expires_at\").notNull(),\n\t\ttoken: text(\"token\").notNull().unique(),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t\tipAddress: text(\"ip_address\"),\n\t\tuserAgent: text(\"user_agent\"),\n\t\tuserId: text(\"user_id\")\n\t\t\t.notNull()\n\t\t\t.references(() => user.id, { onDelete: \"cascade\" }),\n\t},\n\t(table) => [\n\t\tindex(\"session_userId_idx\").on(table.userId),\n\t\tindex(\"session_token_idx\").on(table.token),\n\t],\n);\n\nexport const account = pgTable(\n\t\"account\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\taccountId: text(\"account_id\").notNull(),\n\t\tproviderId: text(\"provider_id\").notNull(),\n\t\tuserId: text(\"user_id\")\n\t\t\t.notNull()\n\t\t\t.references(() => user.id, { onDelete: \"cascade\" }),\n\t\taccessToken: text(\"access_token\"),\n\t\trefreshToken: text(\"refresh_token\"),\n\t\tidToken: text(\"id_token\"),\n\t\taccessTokenExpiresAt: timestamp(\"access_token_expires_at\"),\n\t\trefreshTokenExpiresAt: timestamp(\"refresh_token_expires_at\"),\n\t\tscope: text(\"scope\"),\n\t\tpassword: text(\"password\"),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"account_userId_idx\").on(table.userId)],\n);\n\nexport const verification = pgTable(\n\t\"verification\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\tidentifier: text(\"identifier\").notNull(),\n\t\tvalue: text(\"value\").notNull(),\n\t\texpiresAt: timestamp(\"expires_at\").notNull(),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.defaultNow()\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"verification_identifier_idx\").on(table.identifier)],\n);\n\nexport const userRelations = relations(user, ({ many }) => ({\n\tsessions: many(session),\n\taccounts: many(account),\n}));\n\nexport const sessionRelations = relations(session, ({ one }) => ({\n\tuser: one(user, {\n\t\tfields: [session.userId],\n\t\treferences: [user.id],\n\t}),\n}));\n\nexport const accountRelations = relations(account, ({ one }) => ({\n\tuser: one(user, {\n\t\tfields: [account.userId],\n\t\treferences: [user.id],\n\t}),\n}));\n"
+}
+```
+
+**Tool Call: Read file `drizzle/0001_pink_annihilus.sql`**
+Status: Completed
+
+```json
+{
+  "Text": "CREATE INDEX \"session_token_idx\" ON \"session\" USING btree (\"token\");--> statement-breakpoint\nCREATE INDEX \"user_email_idx\" ON \"user\" USING btree (\"email\");"
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/schema/projects.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { integer, pgTable, serial } from \"drizzle-orm/pg-core\";\n"
+}
+```
+
+**Tool Call: Read file `drizzle.config.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { defineConfig } from \"drizzle-kit\";\n\nif (!process.env.DATABASE_URL) throw new Error(\"DATABASE_URL is not set\");\n\nexport default defineConfig({\n\tschema: \"./src/lib/server/db/schema\",\n\tdialect: \"postgresql\",\n\tdbCredentials: { url: process.env.DATABASE_URL },\n\tverbose: true,\n\tstrict: true,\n});\n"
+}
+```
+
+**Tool Call: Read file `svelte.config.js`**
+Status: Completed
+
+```json
+{
+  "Text": "import adapter from \"@sveltejs/adapter-auto\";\nimport { vitePreprocess } from \"@sveltejs/vite-plugin-svelte\";\n\n/** @type {import('@sveltejs/kit').Config} */\nconst config = {\n\t// Consult https://svelte.dev/docs/kit/integrations\n\t// for more information about preprocessors\n\tpreprocess: vitePreprocess(),\n\tkit: {\n\t\t// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.\n\t\t// If your environment is not supported, or you settled on a specific environment, switch out the adapter.\n\t\t// See https://svelte.dev/docs/kit/adapters for more information about adapters.\n\t\tadapter: adapter(),\n\t\texperimental: {\n\t\t\tremoteFunctions: true,\n\t\t},\n\t},\n\tcompilerOptions: {\n\t\texperimental: {\n\t\t\tasync: true,\n\t\t},\n\t},\n};\n\nexport default config;\n"
+}
+```
+
+**Tool Call: Read file `drizzle/0000_sharp_maggott.sql`**
+Status: Completed
+
+```json
+{
+  "Text": "CREATE TABLE \"account\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"account_id\" text NOT NULL,\n\t\"provider_id\" text NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"access_token\" text,\n\t\"refresh_token\" text,\n\t\"id_token\" text,\n\t\"access_token_expires_at\" timestamp,\n\t\"refresh_token_expires_at\" timestamp,\n\t\"scope\" text,\n\t\"password\" text,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"session\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"expires_at\" timestamp NOT NULL,\n\t\"token\" text NOT NULL,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp NOT NULL,\n\t\"ip_address\" text,\n\t\"user_agent\" text,\n\t\"user_id\" text NOT NULL,\n\tCONSTRAINT \"session_token_unique\" UNIQUE(\"token\")\n);\n--> statement-breakpoint\nCREATE TABLE \"user\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"email\" text NOT NULL,\n\t\"email_verified\" boolean DEFAULT false NOT NULL,\n\t\"image\" text,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL,\n\tCONSTRAINT \"user_email_unique\" UNIQUE(\"email\")\n);\n--> statement-breakpoint\nCREATE TABLE \"verification\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"identifier\" text NOT NULL,\n\t\"value\" text NOT NULL,\n\t\"expires_at\" timestamp NOT NULL,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL\n);\n--> statement-breakpoint\nALTER TABLE \"account\" ADD CONSTRAINT \"account_user_id_user_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"user\"(\"id\") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint\nALTER TABLE \"session\" ADD CONSTRAINT \"session_user_id_user_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"user\"(\"id\") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint\nCREATE INDEX \"account_userId_idx\" ON \"account\" USING btree (\"user_id\");--> statement-breakpoint\nCREATE INDEX \"session_userId_idx\" ON \"session\" USING btree (\"user_id\");--> statement-breakpoint\nCREATE INDEX \"verification_identifier_idx\" ON \"verification\" USING btree (\"identifier\");"
+}
+```
+
+**Tool Call: Read file `vite.config.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "/// <reference types=\"vitest/config\" />\n\nimport path from \"node:path\";\nimport { fileURLToPath } from \"node:url\";\nimport { storybookTest } from \"@storybook/addon-vitest/vitest-plugin\";\nimport { sveltekit } from \"@sveltejs/kit/vite\";\nimport { playwright } from \"@vitest/browser-playwright\";\nimport { defineConfig } from \"vite\";\nimport devtoolsJson from \"vite-plugin-devtools-json\";\n\nconst dirname =\n\ttypeof __dirname !== \"undefined\"\n\t\t? __dirname\n\t\t: path.dirname(fileURLToPath(import.meta.url));\n\n// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon\nexport default defineConfig({\n\tplugins: [sveltekit(), devtoolsJson()],\n\ttest: {\n\t\tprojects: [\n\t\t\t{\n\t\t\t\textends: true,\n\t\t\t\tplugins: [\n\t\t\t\t\t// The plugin will run tests for the stories defined in your Storybook config\n\t\t\t\t\t// See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest\n\t\t\t\t\tstorybookTest({\n\t\t\t\t\t\tconfigDir: path.join(dirname, \".storybook\"),\n\t\t\t\t\t}),\n\t\t\t\t],\n\t\t\t\ttest: {\n\t\t\t\t\tname: \"storybook\",\n\t\t\t\t\tbrowser: {\n\t\t\t\t\t\tenabled: true,\n\t\t\t\t\t\theadless: true,\n\t\t\t\t\t\tprovider: playwright({}),\n\t\t\t\t\t\tinstances: [\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tbrowser: \"chromium\",\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t],\n\t\t\t\t\t},\n\t\t\t\t\tsetupFiles: [\".storybook/vitest.setup.ts\"],\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t},\n});\n"
+}
+```
+
+**Tool Call: Read file `README.md`**
+Status: Completed
+
+```json
+{
+  "Text": "# Clubatime\n\n## Developing\n\n### Regular install\nInstall deps with `pnpm install`. Create a `.env` file and copy the contents of `.env.example` into it. Then, fill in the values.\n\n### Nix/devenv install\n\nThis project uses <https://devenv.sh> for easy access to a dev environment. You can install [lix](https://lix.systems) (A better fork of nix with a nicer installer) like so:\n```sh\ncurl -sSf -L https://install.lix.systems/lix | sh -s -- install\n```\n\n...then install `devenv`\n```sh\nnix-env --install --attr devenv -f https://github.com/NixOS/nixpkgs/tarball/nixpkgs-unstable\n```\n\n(If you're on NixOS, just add `devenv` to your packages/home-manager list)\n\nAnd then enter the development shell with `devenv shell` (or, if you have [direnv](https://direnv.net/docs/installation.html) installed, you can use it instead)\n\n### Running the project\n\nIf you want to startup the builtin postgres database with devenv, you can run\n```\ndevenv up\n```\n\nThe .env.example file has the URL for the default local postgres database.\n\n\nTo start the sveltekit/vite development server:\n\n```sh\npnpm run dev\n\npnpm run dev -- --open\n```\n\n## Building\n\nTo create a production version of your app:\n\n```sh\npnpm run build\n```\n\nYou can preview the production build with `pnpm run preview`.\n\n## Important tools\n\n- NodeJS and pnpm: Installing and running the project\n- [Biome](https://biomejs.dev/): Linter/code formatter. You should probably run `pnpm biome check` to check any issues before making a commit/pushing.\n- `drizzle-kit`: Database tooling. Use to generate migrations. See [The docs](https://orm.drizzle.team/docs/migrations) for more info\n\n## Useful documentation\n\n- https://orm.drizzle.team/docs/overview: Database/ORM\n- https://www.better-auth.com/docs/introduction: How we handle authentication\n  - **Note**: we do _not_ use the builtin svelte createAuthClient, and it's designed around Svelte 3 and doesn't SSR properly. For any functionality, create a form/query inside of [auth.remote.ts](./src/lib/auth.remote.ts).\n- https://svelte.dev/docs: UI Framework\n"
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/.env*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [
+    "/home/end/Github/clubatime/.env",
+    "/home/end/Github/clubatime/.env.example"
+  ],
+  "all_matches_len": 2
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/**/*.stories.*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Read file `.env.example`**
+Status: Failed
+
+Cannot read file because its path matches the global `private_files` setting: clubatime/.env.example
+
+**Tool Call: Read file `.github`**
+Status: Failed
+
+reading bytes of the file "/home/end/Github/clubatime/.github"
+
+**Tool Call: List the `clubatime/.github` directory's contents**
+Status: Completed
+
+
+# Files:
+clubatime/.github/dependabot.yml
+
+
+**Tool Call: Find paths matching “`clubatime/src/**/*valibot*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/src/**/*admin*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/src/**/*error*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/src/**/*club*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/src/**/*cdn*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/src/**/*submit*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [],
+  "all_matches_len": 0
+}
+```
+
+**Tool Call: Find paths matching “`clubatime/src/**/*schema*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [
+    "/home/end/Github/clubatime/src/lib/server/db/schema",
+    "/home/end/Github/clubatime/src/lib/server/db/schema/auth.ts",
+    "/home/end/Github/clubatime/src/lib/server/db/schema/projects.ts"
+  ],
+  "all_matches_len": 3
+}
+```
+
+**Tool Call: Search files for regex `valibot`**
+Status: Completed
+
+No matches found
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Here's the full picture. I audited every file in the repo against your plan from the thread. Here's **everything that still needs to be done**, organized by priority:
+
+---
+
+## ✅ What's Already Done
+- SvelteKit project scaffolded with `remoteFunctions` enabled
+- Layout shell: `+layout.svelte` with navbar + sidebar
+- Global CSS with dark-first Hack Club theming
+- Better Auth configured with Hack Club OIDC (basic scopes)
+- Auth remote functions: `getSession`, `signIn`, `signOut`
+- `hooks.server.ts` injecting session into `event.locals`
+- Drizzle + Postgres wired up (`db/index.ts`, `drizzle.config.ts`)
+- Auth schema (user/session/account/verification) with 2 migrations
+- Home page with conditional auth display
+- Storybook scaffolded
+- README with dev setup instructions
+
+---
+
+## 🔴 High Priority — Database & Schema
+
+1. **Submissions + Clubs Drizzle schema** (Issue #37) — `projects.ts` is currently empty (just a bare import):
+```clubatime/src/lib/server/db/schema/projects.ts#L1
+import { integer, pgTable, serial } from "drizzle-orm/pg-core";
+```
+   Needs: `submissions` table (status, project name, description, repo URL, demo URL, screenshot CDN URLs, hours requested, reviewer notes, timestamps, FK to user) and `clubs` table (cached club data from Clubs API).
+
+2. **Add `role` column to `user` table** (Issue #16) — No role/admin flag exists on the user schema. Needed for admin gating.
+
+3. **Add HCA profile fields to `user` table** (Issue #17) — Missing columns: `slackId`, `birthday`, `address` (street, city, state, zip, country), `yswsEligible`, `githubUsername`, `verificationStatus`.
+
+4. **Run `pnpm db:generate` + `pnpm db:migrate`** after all schema changes.
+
+---
+
+## 🔴 High Priority — Auth Scopes & Profile Mapping
+
+5. **Update auth scopes** (Issue #18) — Currently requesting:
+```clubatime/src/lib/server/auth.ts#L24
+scopes: ["openid", "profile", "email", "name", "verification_status"],
+```
+   Missing: `slack_id`, `address`, `birthdate` (you're an HQ app, so you can request these).
+
+6. **Map HCA OIDC claims → user fields** — After adding the extra scopes, you need to hook into Better Auth's profile mapping so `slackId`, `birthday`, `address`, etc. get written to the user row on login.
+
+---
+
+## 🔴 High Priority — Server Helpers (none exist yet)
+
+7. **HC CDN upload client** (Issue #21) — Create `src/lib/server/hc-cdn.ts` — accepts a `File`/data URL, POSTs to HC CDN, returns permanent CDN URL.
+
+8. **Clubs API client** — Create `src/lib/server/clubs-api.ts` — queries `https://clubapi.hackclub.com` for leader status, club members, etc.
+
+9. **Submissions data access functions** (Issue #38) — Create `src/lib/server/submissions.ts` — Drizzle helpers for create/read/update submissions.
+
+10. **Delete or repurpose `airtable.ts`** — It's an empty file left over from the old Airtable plan:
+```clubatime/src/lib/server/airtable.ts#L1
+
+```
+
+---
+
+## 🔴 High Priority — Validation
+
+11. **Install Valibot** — It's not in `package.json` at all. Need `pnpm add valibot`.
+
+12. **Submission validation schema** (Issue #22) — Create `src/lib/schemas/submission.ts` with Valibot schemas for all text fields (project name, description, repo URL, etc.).
+
+13. **Add Valibot validation to all remote functions** (Issue #32) — Currently `auth.remote.ts` has no input validation (it doesn't take user input, so that's fine for now, but any future submission remote functions need it).
+
+---
+
+## 🔴 High Priority — Submission Flow (core feature, nothing exists)
+
+14. **Submission remote functions** (Issue #23) — Create a `src/lib/submissions.remote.ts` (or similar) with `getFormData` (prefill from HCA claims) and `submitProject` (validate → upload files to CDN → insert to Postgres).
+
+15. **Submit page UI** (Issue #24) — Create `src/routes/submit/+page.svelte` — HTML-first form with file inputs, prefilled fields, scoped CSS. **This route doesn't exist at all.**
+
+---
+
+## 🟡 Medium Priority — Pages (most are missing)
+
+16. **Hours page** (Issue #25) — The file exists but is broken/incomplete HTML:
+```clubatime/src/routes/hours/+page.svelte#L1-10
+<script lang="ts">
+    import { getSession } from "$lib/auth.remote";
+
+    const session = await getSession();
+</script>
+
+<div class="page-header">
+    <header class
+</div>
+```
+   Needs: query submissions for current user from DB, display list with status badges.
+
+17. **Admin review dashboard** (Issue #26) — No `/admin` route exists. Needs admin-only gating, list of pending submissions, approve/reject actions.
+
+18. **Club leader dashboard** (Issue #27) — No `/club` route exists. Needs leader-only gating, view of club members' submissions.
+
+19. **Rewards page** (Issue #33) — No `/rewards` route exists.
+
+---
+
+## 🟡 Medium Priority — Infrastructure & Caching
+
+20. **Cache Clubs API responses in Postgres with TTL** (Issue #30) — Need a `clubs_api_cache` table or similar, and logic to check TTL before hitting the live API.
+
+21. **Seed clubs table from Clubs API** (Issue #39) — Initial import of club data.
+
+22. **`.env.example` update** (Issue #31) — Verify it has all required vars: `DATABASE_URL`, `BETTER_AUTH_URL`, `HACKCLUB_CLIENT_ID`, `HACKCLUB_CLIENT_SECRET`, `CLUBS_API_KEY`, `HC_CDN_API_KEY`. Remove any leftover Airtable vars.
+
+---
+
+## 🟢 Lower Priority — Quality & Polish
+
+23. **Error page** (Issue #36) — No `+error.svelte` exists anywhere. Need a global error page and error handler.
+
+24. **Mobile nav / hamburger menu** (Issue #35) — Sidebar currently does `display: none` on mobile with no alternative:
+```clubatime/src/lib/components/sidebar.svelte#L117-119
+    @media (max-width: 768px) {
+        .sidebar {
+            display: none;
+```
+
+25. **Unit tests with Vitest** (Issue #34) — No test files exist (Storybook is set up but there are zero stories).
+
+26. **Layout CSS bug** — The layout has a `.app-body` class defined in `<style>` but it's never used in the template (the template uses `app-layout` → `app-main` → `app-content` directly, no `.app-body` wrapper):
+```clubatime/src/routes/+layout.svelte#L32-35
+    .app-body {
+        display: flex;
+        flex: 1;
+        padding-top: var(--navbar-height);
+    }
+```
+
+---
+
+## 📋 Summary Scorecard
+
+| Category | Status |
+|---|---|
+| **Project scaffold** | ✅ Done |
+| **Layout / navbar / sidebar** | ✅ Done (minor CSS bug) |
+| **Auth (basic sign in/out)** | ✅ Done |
+| **Auth scopes (HQ extras)** | ❌ Missing `slack_id`, `address`, `birthdate` |
+| **Auth profile → user mapping** | ❌ Not implemented |
+| **DB: auth schema** | ✅ Done |
+| **DB: user extra fields (role, profile)** | ❌ Not added |
+| **DB: submissions schema** | ❌ Empty file |
+| **DB: clubs schema/cache** | ❌ Not created |
+| **Server: HC CDN client** | ❌ Not created |
+| **Server: Clubs API client** | ❌ Not created |
+| **Server: submissions helpers** | ❌ Not created |
+| **Valibot (even installed?)** | ❌ Not installed |
+| **Validation schemas** | ❌ Not created |
+| **Submit page** | ❌ Route doesn't exist |
+| **Hours page** | ⚠️ Broken/incomplete |
+| **Admin page** | ❌ Route doesn't exist |
+| **Club page** | ❌ Route doesn't exist |
+| **Rewards page** | ❌ Route doesn't exist |
+| **Error page** | ❌ Doesn't exist |
+| **Mobile nav** | ❌ Hidden on mobile, no alternative |
+| **Tests** | ❌ None |
+| **Dead code cleanup** | ⚠️ `airtable.ts` empty, `.app-body` unused |
+
+**Bottom line:** The shell (layout, auth, DB connection) is solid. But essentially all of the *feature* code — schemas, server helpers, validation, pages, and the entire submission flow — still needs to be built. If you want to pick a starting point, I'd suggest tackling items **1–3** (schemas) then **11–15** (validation + submission flow) since that's the core of the app.
+
+## User
+
+give me the code based on the summary
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+This is going to be a big one. I'll give you every file — new and modified — organized by layer. After pasting all of these in, you'll need to:
+
+1. `pnpm add valibot`
+2. Delete `src/lib/server/airtable.ts`
+3. `pnpm db:generate` → `pnpm db:migrate`
+
+---
+
+## 1 — Database Schema
+
+### `src/lib/server/db/schema/auth.ts` (modified — add profile/role columns)
+
+```clubatime/src/lib/server/db/schema/auth.ts#L1-105
+import { relations } from "drizzle-orm";
+import {
+	boolean,
+	index,
+	pgTable,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
+
+export const user = pgTable(
+	"user",
+	{
+		id: text("id").primaryKey(),
+		name: text("name").notNull(),
+		email: text("email").notNull().unique(),
+		emailVerified: boolean("email_verified").default(false).notNull(),
+		image: text("image"),
+
+		// --- clubatime additions ---
+		role: text("role").default("member").notNull(), // member | leader | admin
+		slackId: text("slack_id"),
+		birthday: text("birthday"), // ISO date string from HCA
+		addressStreet: text("address_street"),
+		addressCity: text("address_city"),
+		addressState: text("address_state"),
+		addressZip: text("address_zip"),
+		addressCountry: text("address_country"),
+		githubUsername: text("github_username"),
+		verificationStatus: text("verification_status"),
+		yswsEligible: boolean("ysws_eligible").default(false).notNull(),
+
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.defaultNow()
+			.$onUpdate(() => new Date())
+			.notNull(),
+	},
+	(table) => [index("user_email_idx").on(table.email)],
+);
+
+export const session = pgTable(
+	"session",
+	{
+		id: text("id").primaryKey(),
+		expiresAt: timestamp("expires_at").notNull(),
+		token: text("token").notNull().unique(),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.$onUpdate(() => new Date())
+			.notNull(),
+		ipAddress: text("ip_address"),
+		userAgent: text("user_agent"),
+		userId: text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+	},
+	(table) => [
+		index("session_userId_idx").on(table.userId),
+		index("session_token_idx").on(table.token),
+	],
+);
+
+export const account = pgTable(
+	"account",
+	{
+		id: text("id").primaryKey(),
+		accountId: text("account_id").notNull(),
+		providerId: text("provider_id").notNull(),
+		userId: text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		accessToken: text("access_token"),
+		refreshToken: text("refresh_token"),
+		idToken: text("id_token"),
+		accessTokenExpiresAt: timestamp("access_token_expires_at"),
+		refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+		scope: text("scope"),
+		password: text("password"),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.$onUpdate(() => new Date())
+			.notNull(),
+	},
+	(table) => [index("account_userId_idx").on(table.userId)],
+);
+
+export const verification = pgTable(
+	"verification",
+	{
+		id: text("id").primaryKey(),
+		identifier: text("identifier").notNull(),
+		value: text("value").notNull(),
+		expiresAt: timestamp("expires_at").notNull(),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.defaultNow()
+			.$onUpdate(() => new Date())
+			.notNull(),
+	},
+	(table) => [index("verification_identifier_idx").on(table.identifier)],
+);
+
+export const userRelations = relations(user, ({ many }) => ({
+	sessions: many(session),
+	accounts: many(account),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+	user: one(user, {
+		fields: [session.userId],
+		references: [user.id],
+	}),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+	user: one(user, {
+		fields: [account.userId],
+		references: [user.id],
+	}),
+}));
+```
+
+### `src/lib/server/db/schema/projects.ts` (rewritten — submissions + clubs cache)
+
+```clubatime/src/lib/server/db/schema/projects.ts#L1-97
+import { relations } from "drizzle-orm";
+import {
+	index,
+	integer,
+	jsonb,
+	pgTable,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
+import { user } from "./auth";
+
+// ── Submissions ─────────────────────────────────────────────
+export const submission = pgTable(
+	"submission",
+	{
+		id: text("id")
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		userId: text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+
+		projectName: text("project_name").notNull(),
+		description: text("description").notNull(),
+		repoUrl: text("repo_url").notNull(),
+		demoUrl: text("demo_url"),
+		screenshotUrls: jsonb("screenshot_urls").$type<string[]>().default([]),
+
+		hoursRequested: integer("hours_requested").notNull(),
+		hoursAwarded: integer("hours_awarded"),
+
+		status: text("status").default("pending").notNull(),
+		// pending | approved | rejected | revision_requested
+
+		reviewerNotes: text("reviewer_notes"),
+		reviewedBy: text("reviewed_by").references(() => user.id),
+		reviewedAt: timestamp("reviewed_at"),
+
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.defaultNow()
+			.$onUpdate(() => new Date())
+			.notNull(),
+	},
+	(table) => [
+		index("submission_userId_idx").on(table.userId),
+		index("submission_status_idx").on(table.status),
+	],
+);
+
+export const submissionRelations = relations(submission, ({ one }) => ({
+	user: one(user, {
+		fields: [submission.userId],
+		references: [user.id],
+	}),
+	reviewer: one(user, {
+		fields: [submission.reviewedBy],
+		references: [user.id],
+	}),
+}));
+
+// ── Clubs API cache ─────────────────────────────────────────
+export const clubsCache = pgTable(
+	"clubs_cache",
+	{
+		id: text("id").primaryKey(), // club ID from Clubs API
+		name: text("name").notNull(),
+		description: text("description"),
+		leaders: jsonb("leaders").$type<string[]>().default([]),
+		members: jsonb("members")
+			.$type<{ id: string; name: string; email?: string }[]>()
+			.default([]),
+		rawData: jsonb("raw_data"), // full API response for debugging
+
+		cachedAt: timestamp("cached_at").defaultNow().notNull(),
+		expiresAt: timestamp("expires_at").notNull(),
+	},
+	(table) => [index("clubs_cache_expiresAt_idx").on(table.expiresAt)],
+);
+```
+
+---
+
+## 2 — Auth Config (scopes + profile mapping)
+
+```clubatime/src/lib/server/auth.ts#L1-96
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { betterAuth } from "better-auth/minimal";
+import { genericOAuth } from "better-auth/plugins";
+import { sveltekitCookies } from "better-auth/svelte-kit";
+import { getRequestEvent } from "$app/server";
+import { env } from "$env/dynamic/private";
+import { db } from "./db";
+
+export const auth = betterAuth({
+	database: drizzleAdapter(db, {
+		provider: "pg",
+	}),
+	baseURL: env.BETTER_AUTH_URL,
+	experimental: {
+		joins: true,
+	},
+	user: {
+		additionalFields: {
+			role: {
+				type: "string",
+				defaultValue: "member",
+				input: false,
+			},
+			slackId: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			birthday: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			addressStreet: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			addressCity: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			addressState: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			addressZip: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			addressCountry: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			githubUsername: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			verificationStatus: {
+				type: "string",
+				required: false,
+				input: false,
+			},
+			yswsEligible: {
+				type: "boolean",
+				defaultValue: false,
+				input: false,
+			},
+		},
+	},
+	plugins: [
+		genericOAuth({
+			config: [
+				{
+					providerId: "hackclub",
+					clientId: env.HACKCLUB_CLIENT_ID,
+					clientSecret: env.HACKCLUB_CLIENT_SECRET,
+					discoveryUrl:
+						"https://auth.hackclub.com/.well-known/openid-configuration",
+					scopes: [
+						"openid",
+						"profile",
+						"email",
+						"name",
+						"verification_status",
+						"slack_id",
+						"address",
+						"birthdate",
+					],
+					mapProfileToUser: (profile) => ({
+						slackId: profile.slack_id ?? null,
+						birthday: profile.birthdate ?? null,
+						addressStreet: profile.address?.street_address ?? null,
+						addressCity: profile.address?.locality ?? null,
+						addressState: profile.address?.region ?? null,
+						addressZip: profile.address?.postal_code ?? null,
+						addressCountry: profile.address?.country ?? null,
+						githubUsername: profile.github_username ?? null,
+						verificationStatus: profile.verification_status ?? null,
+					}),
+				},
+			],
+		}),
+		sveltekitCookies(getRequestEvent),
+	],
+	session: {
+		cookieCache: {
+			enabled: true,
+			maxAge: 5 * 60,
+		},
+	},
+});
+
+export type ServerSession = typeof auth.$Infer.Session.session;
+export type ServerUser = typeof auth.$Infer.Session.user;
+```
+
+---
+
+## 3 — Server Helpers
+
+### `src/lib/server/hc-cdn.ts` (new)
+
+```clubatime/src/lib/server/hc-cdn.ts#L1-60
+import { env } from "$env/dynamic/private";
+
+const HC_CDN_BASE = "https://cdn.hackclub.com";
+
+/**
+ * Convert a File to a data URL string.
+ */
+async function fileToDataUrl(file: File): Promise<string> {
+	const buffer = await file.arrayBuffer();
+	const base64 = Buffer.from(buffer).toString("base64");
+	return `data:${file.type};base64,${base64}`;
+}
+
+/**
+ * Upload a data URL to the Hack Club CDN.
+ * Returns the permanent CDN URL on success.
+ */
+export async function uploadDataUrl(dataUrl: string): Promise<string> {
+	const res = await fetch(`${HC_CDN_BASE}/api/upload`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${env.HC_CDN_API_KEY}`,
+		},
+		body: JSON.stringify({ data: dataUrl }),
+	});
+
+	if (!res.ok) {
+		const text = await res.text();
+		throw new Error(`HC CDN upload failed (${res.status}): ${text}`);
+	}
+
+	const json = await res.json();
+	// The CDN returns the URL of the uploaded file.
+	// Adjust the field name if the actual API response differs.
+	return json.url as string;
+}
+
+/**
+ * Upload a File object to the Hack Club CDN.
+ * Converts to data URL first, then uploads.
+ * Returns the permanent CDN URL.
+ */
+export async function uploadFile(file: File): Promise<string> {
+	const dataUrl = await fileToDataUrl(file);
+	return uploadDataUrl(dataUrl);
+}
+
+/**
+ * Upload multiple files in parallel.
+ * Returns an array of permanent CDN URLs.
+ */
+export async function uploadFiles(files: File[]): Promise<string[]> {
+	return Promise.all(files.map(uploadFile));
+}
+```
+
+### `src/lib/server/clubs-api.ts` (new)
+
+```clubatime/src/lib/server/clubs-api.ts#L1-100
+import { eq, lt } from "drizzle-orm";
+import { env } from "$env/dynamic/private";
+import { db } from "./db";
+import { clubsCache } from "./db/schema/projects";
+
+const CLUBS_API_BASE = "https://clubapi.hackclub.com";
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+
+interface ClubApiClub {
+	id: string;
+	name: string;
+	description?: string;
+	leaders: string[];
+	members: { id: string; name: string; email?: string }[];
+	[key: string]: unknown;
+}
+
+async function fetchFromApi(path: string): Promise<unknown> {
+	const res = await fetch(`${CLUBS_API_BASE}${path}`, {
+		headers: {
+			Authorization: `Bearer ${env.CLUBS_API_KEY}`,
+			"Content-Type": "application/json",
+		},
+	});
+
+	if (!res.ok) {
+		const text = await res.text();
+		throw new Error(`Clubs API ${path} failed (${res.status}): ${text}`);
+	}
+
+	return res.json();
+}
+
+/**
+ * Get a club by ID, using the Postgres cache when possible.
+ */
+export async function getClub(clubId: string): Promise<typeof clubsCache.$inferSelect | null> {
+	// Check cache first
+	const [cached] = await db
+		.select()
+		.from(clubsCache)
+		.where(eq(clubsCache.id, clubId))
+		.limit(1);
+
+	if (cached && cached.expiresAt > new Date()) {
+		return cached;
+	}
+
+	// Cache miss or expired — fetch from API
+	try {
+		const club = (await fetchFromApi(`/clubs/${clubId}`)) as ClubApiClub;
+		const now = new Date();
+		const expiresAt = new Date(now.getTime() + CACHE_TTL_MS);
+
+		const record = {
+			id: club.id,
+			name: club.name,
+			description: club.description ?? null,
+			leaders: club.leaders ?? [],
+			members: club.members ?? [],
+			rawData: club,
+			cachedAt: now,
+			expiresAt,
+		};
+
+		await db
+			.insert(clubsCache)
+			.values(record)
+			.onConflictDoUpdate({
+				target: clubsCache.id,
+				set: record,
+			});
+
+		return record as typeof clubsCache.$inferSelect;
+	} catch (err) {
+		// If API fails but we have stale cache, return it
+		if (cached) return cached;
+		throw err;
+	}
+}
+
+/**
+ * Check if a user ID is a leader of any cached club.
+ */
+export async function isLeader(userId: string): Promise<boolean> {
+	const clubs = await db.select().from(clubsCache);
+	return clubs.some((club) => (club.leaders as string[]).includes(userId));
+}
+
+/**
+ * Prune expired cache entries.
+ */
+export async function pruneClubsCache(): Promise<void> {
+	await db.delete(clubsCache).where(lt(clubsCache.expiresAt, new Date()));
+}
+```
+
+### `src/lib/server/submissions.ts` (new)
+
+```clubatime/src/lib/server/submissions.ts#L1-89
+import { desc, eq, sql } from "drizzle-orm";
+import { db } from "./db";
+import { submission } from "./db/schema/projects";
+
+export type Submission = typeof submission.$inferSelect;
+export type NewSubmission = typeof submission.$inferInsert;
+
+/**
+ * Create a new submission.
+ */
+export async function createSubmission(
+	data: Omit<NewSubmission, "id" | "createdAt" | "updatedAt">,
+): Promise<Submission> {
+	const [row] = await db.insert(submission).values(data).returning();
+	return row;
+}
+
+/**
+ * Get all submissions for a given user, newest first.
+ */
+export async function getSubmissionsByUser(
+	userId: string,
+): Promise<Submission[]> {
+	return db
+		.select()
+		.from(submission)
+		.where(eq(submission.userId, userId))
+		.orderBy(desc(submission.createdAt));
+}
+
+/**
+ * Get a single submission by ID.
+ */
+export async function getSubmissionById(
+	id: string,
+): Promise<Submission | undefined> {
+	const [row] = await db
+		.select()
+		.from(submission)
+		.where(eq(submission.id, id))
+		.limit(1);
+	return row;
+}
+
+/**
+ * Get all submissions (for admin review), newest first.
+ * Optionally filter by status.
+ */
+export async function getAllSubmissions(
+	status?: string,
+): Promise<Submission[]> {
+	const query = db.select().from(submission);
+	if (status) {
+		return query
+			.where(eq(submission.status, status))
+			.orderBy(desc(submission.createdAt));
+	}
+	return query.orderBy(desc(submission.createdAt));
+}
+
+/**
+ * Update submission status (for admin review).
+ */
+export async function reviewSubmission(
+	id: string,
+	reviewerId: string,
+	data: {
+		status: string;
+		reviewerNotes?: string;
+		hoursAwarded?: number;
+	},
+): Promise<Submission | undefined> {
+	const [row] = await db
+		.update(submission)
+		.set({
+			status: data.status,
+			reviewerNotes: data.reviewerNotes ?? null,
+			hoursAwarded: data.hoursAwarded ?? null,
+			reviewedBy: reviewerId,
+			reviewedAt: new Date(),
+		})
+		.where(eq(submission.id, id))
+		.returning();
+	return row;
+}
+
+/**
+ * Get total approved hours for a user.
+ */
+export async function getApprovedHours(userId: string): Promise<number> {
+	const [result] = await db
+		.select({ total: sql<number>`coalesce(sum(${submission.hoursAwarded}), 0)` })
+		.from(submission)
+		.where(eq(submission.userId, userId));
+	return Number(result?.total ?? 0);
+}
+```
+
+---
+
+## 4 — Validation (Valibot)
+
+### `src/lib/schemas/submission.ts` (new)
+
+```clubatime/src/lib/schemas/submission.ts#L1-56
+import * as v from "valibot";
+
+export const SubmissionSchema = v.object({
+	projectName: v.pipe(
+		v.string("Project name is required"),
+		v.trim(),
+		v.minLength(2, "Project name must be at least 2 characters"),
+		v.maxLength(200, "Project name must be under 200 characters"),
+	),
+	description: v.pipe(
+		v.string("Description is required"),
+		v.trim(),
+		v.minLength(10, "Description must be at least 10 characters"),
+		v.maxLength(5000, "Description must be under 5000 characters"),
+	),
+	repoUrl: v.pipe(
+		v.string("Repository URL is required"),
+		v.trim(),
+		v.url("Must be a valid URL"),
+	),
+	demoUrl: v.optional(
+		v.pipe(v.string(), v.trim(), v.url("Must be a valid URL")),
+	),
+	hoursRequested: v.pipe(
+		v.number("Hours is required"),
+		v.integer("Hours must be a whole number"),
+		v.minValue(1, "Must request at least 1 hour"),
+		v.maxValue(1000, "Cannot request more than 1000 hours"),
+	),
+});
+
+export type SubmissionInput = v.InferInput<typeof SubmissionSchema>;
+
+export const ReviewSchema = v.object({
+	submissionId: v.pipe(
+		v.string("Submission ID is required"),
+		v.trim(),
+		v.uuid("Invalid submission ID"),
+	),
+	status: v.picklist(
+		["approved", "rejected", "revision_requested"],
+		"Invalid status",
+	),
+	reviewerNotes: v.optional(
+		v.pipe(
+			v.string(),
+			v.trim(),
+			v.maxLength(2000, "Notes must be under 2000 characters"),
+		),
+	),
+	hoursAwarded: v.optional(
+		v.pipe(
+			v.number(),
+			v.integer("Hours must be a whole number"),
+			v.minValue(0, "Hours cannot be negative"),
+			v.maxValue(1000, "Cannot award more than 1000 hours"),
+		),
+	),
+});
+
+export type ReviewInput = v.InferInput<typeof ReviewSchema>;
+```
+
+---
+
+## 5 — Remote Functions
+
+### `src/lib/submissions.remote.ts` (new)
+
+```clubatime/src/lib/submissions.remote.ts#L1-93
+import { error, redirect } from "@sveltejs/kit";
+import * as v from "valibot";
+import { form, getRequestEvent, query } from "$app/server";
+import { auth } from "./server/auth";
+import { uploadFiles } from "./server/hc-cdn";
+import {
+	createSubmission,
+	getApprovedHours,
+	getSubmissionsByUser,
+} from "./server/submissions";
+import { SubmissionSchema } from "./schemas/submission";
+
+/**
+ * Return the current user's profile data for form prefill,
+ * plus their existing submissions.
+ */
+export const getSubmitPageData = query(async () => {
+	const session = await auth.api.getSession({
+		headers: getRequestEvent().request.headers,
+	});
+
+	if (!session?.user) return null;
+
+	const submissions = await getSubmissionsByUser(session.user.id);
+	const totalHours = await getApprovedHours(session.user.id);
+
+	return {
+		user: {
+			id: session.user.id,
+			name: session.user.name,
+			email: session.user.email,
+		},
+		submissions,
+		totalHours,
+	};
+});
+
+/**
+ * Handle project submission.
+ * Validates text fields with Valibot, uploads screenshots to HC CDN,
+ * and inserts a row into the submissions table.
+ */
+export const submitProject = form(async () => {
+	const event = getRequestEvent();
+	const session = await auth.api.getSession({
+		headers: event.request.headers,
+	});
+
+	if (!session?.user) {
+		error(401, "You must be signed in to submit a project");
+	}
+
+	const formData = await event.request.formData();
+
+	// Parse text fields
+	const raw = {
+		projectName: formData.get("projectName") as string,
+		description: formData.get("description") as string,
+		repoUrl: formData.get("repoUrl") as string,
+		demoUrl: (formData.get("demoUrl") as string) || undefined,
+		hoursRequested: Number(formData.get("hoursRequested")),
+	};
+
+	const result = v.safeParse(SubmissionSchema, raw);
+
+	if (!result.success) {
+		const messages = result.issues.map((i) => i.message).join("; ");
+		error(400, messages);
+	}
+
+	// Handle file uploads
+	const files = formData.getAll("screenshots") as File[];
+	const validFiles = files.filter((f) => f.size > 0);
+
+	let screenshotUrls: string[] = [];
+	if (validFiles.length > 0) {
+		screenshotUrls = await uploadFiles(validFiles);
+	}
+
+	// Insert into DB
+	await createSubmission({
+		userId: session.user.id,
+		projectName: result.output.projectName,
+		description: result.output.description,
+		repoUrl: result.output.repoUrl,
+		demoUrl: result.output.demoUrl ?? null,
+		screenshotUrls,
+		hoursRequested: result.output.hoursRequested,
+		status: "pending",
+	});
+
+	redirect(303, "/hours?submitted=true");
+});
+```
+
+### `src/lib/admin.remote.ts` (new)
+
+```clubatime/src/lib/admin.remote.ts#L1-68
+import { error } from "@sveltejs/kit";
+import * as v from "valibot";
+import { form, getRequestEvent, query } from "$app/server";
+import { auth } from "./server/auth";
+import { getAllSubmissions, reviewSubmission } from "./server/submissions";
+import { ReviewSchema } from "./schemas/submission";
+
+/**
+ * Get all submissions for the admin review dashboard.
+ * Only accessible to users with role "admin".
+ */
+export const getAdminData = query(async () => {
+	const session = await auth.api.getSession({
+		headers: getRequestEvent().request.headers,
+	});
+
+	if (!session?.user) return null;
+
+	// @ts-expect-error -- additionalFields adds `role` at runtime
+	if (session.user.role !== "admin") {
+		error(403, "Admin access required");
+	}
+
+	const pending = await getAllSubmissions("pending");
+	const all = await getAllSubmissions();
+
+	return { pending, all };
+});
+
+/**
+ * Review (approve / reject / request revision) a submission.
+ */
+export const reviewProject = form(async () => {
+	const event = getRequestEvent();
+	const session = await auth.api.getSession({
+		headers: event.request.headers,
+	});
+
+	if (!session?.user) {
+		error(401, "You must be signed in");
+	}
+
+	// @ts-expect-error -- additionalFields adds `role` at runtime
+	if (session.user.role !== "admin") {
+		error(403, "Admin access required");
+	}
+
+	const formData = await event.request.formData();
+
+	const raw = {
+		submissionId: formData.get("submissionId") as string,
+		status: formData.get("status") as string,
+		reviewerNotes: (formData.get("reviewerNotes") as string) || undefined,
+		hoursAwarded: formData.get("hoursAwarded")
+			? Number(formData.get("hoursAwarded"))
+			: undefined,
+	};
+
+	const result = v.safeParse(ReviewSchema, raw);
+	if (!result.success) {
+		const messages = result.issues.map((i) => i.message).join("; ");
+		error(400, messages);
+	}
+
+	await reviewSubmission(session.user.id, result.output.submissionId, {
+		status: result.output.status,
+		reviewerNotes: result.output.reviewerNotes,
+		hoursAwarded: result.output.hoursAwarded,
+	});
+});
+```
+
+### `src/lib/clubs.remote.ts` (new)
+
+```clubatime/src/lib/clubs.remote.ts#L1-27
+import { error } from "@sveltejs/kit";
+import { getRequestEvent, query } from "$app/server";
+import { auth } from "./server/auth";
+import { isLeader } from "./server/clubs-api";
+import {
+	getApprovedHours,
+	getSubmissionsByUser,
+} from "./server/submissions";
+
+/**
+ * Get club-leader-specific data.
+ * Returns the current user's submissions + leader status.
+ */
+export const getClubData = query(async () => {
+	const session = await auth.api.getSession({
+		headers: getRequestEvent().request.headers,
+	});
+
+	if (!session?.user) return null;
+
+	const leader = await isLeader(session.user.id);
+	const submissions = await getSubmissionsByUser(session.user.id);
+	const totalHours = await getApprovedHours(session.user.id);
+
+	return { leader, submissions, totalHours, user: session.user };
+});
+```
+
+---
+
+## 6 — Mobile Nav Store
+
+### `src/lib/stores/mobile-nav.svelte.ts` (new)
+
+```clubatime/src/lib/stores/mobile-nav.svelte.ts#L1-3
+export const mobileNav = $state({ open: false });
+```
+
+---
+
+## 7 — Layout & Components (modified)
+
+### `src/routes/+layout.svelte` (fixed)
+
+```clubatime/src/routes/+layout.svelte#L1-59
+<script lang="ts">
+    import "$lib/styles/app.css";
+    import Navbar from "$lib/components/navbar.svelte";
+    import Sidebar from "$lib/components/sidebar.svelte";
+    import favicon from "$lib/assets/favicon.svg";
+    import { mobileNav } from "$lib/stores/mobile-nav.svelte";
+
+    const { children } = $props();
+</script>
+
+<svelte:head>
+    <link rel="icon" href={favicon} />
+    <title>Clubatime</title>
+</svelte:head>
+
+<div class="app-layout">
+    <Navbar />
+    <div class="app-body">
+        <Sidebar />
+        <main class="app-main">
+            <div class="app-content">
+                {@render children()}
+            </div>
+        </main>
+    </div>
+</div>
+
+{#if mobileNav.open}
+    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+    <div class="overlay" onclick={() => (mobileNav.open = false)}></div>
+{/if}
+
+<style>
+    .app-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .app-body {
+        display: flex;
+        flex: 1;
+        padding-top: var(--navbar-height);
+    }
+
+    .app-main {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .app-content {
+        padding: 24px;
+        margin-left: var(--sidebar-width);
+        max-width: 1000px;
+    }
+
+    @media (max-width: 768px) {
+        .app-content {
+            margin-left: 0;
+            padding: 16px;
+        }
+    }
+
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 89;
+    }
+</style>
+```
+
+### `src/lib/components/navbar.svelte` (modified — added hamburger)
+
+```clubatime/src/lib/components/navbar.svelte#L1-126
+<script lang="ts">
+    import { getSession, signIn, signOut } from "$lib/auth.remote";
+    import logo from "$lib/assets/flag-standalone.svg";
+    import { mobileNav } from "$lib/stores/mobile-nav.svelte";
+
+    const session = await getSession();
+</script>
+
+<nav>
+    <div class="nav-left">
+        <button
+            class="hamburger"
+            aria-label="Toggle menu"
+            onclick={() => (mobileNav.open = !mobileNav.open)}
+        >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </button>
+        <a href="/" class="brand">
+            <img
+                src={logo}
+                alt="A red flag with a brown base, and the words &quot;Hack Club&quot; in white inside the flag"
+                class="logo"
+            />
+            <span class="brand-text">Clubatime</span>
+        </a>
+    </div>
+
+    <div class="user-area">
+        {#if session?.user}
+            <span class="username">{session.user.name}</span>
+            <form {...signOut}>
+                <button type="submit" class="btn btn-secondary">Sign Out</button>
+            </form>
+        {:else}
+            <form {...signIn}>
+                <button type="submit" class="btn btn-primary">
+                    Sign in with Hack Club
+                </button>
+            </form>
+        {/if}
+    </div>
+</nav>
+
+<style>
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--navbar-height);
+        background: var(--color-bg-secondary);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        z-index: 100;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--color-text);
+        padding: 4px;
+        border-radius: var(--radius);
+    }
+
+    .hamburger:hover {
+        background: var(--color-bg-tertiary);
+    }
+
+    @media (max-width: 768px) {
+        .hamburger {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--color-text);
+        text-decoration: none;
+    }
+
+    .brand:hover {
+        text-decoration: none;
+    }
+
+    .logo {
+        height: 28px;
+        width: auto;
+    }
+
+    .brand-text {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .user-area {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .username {
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 8px 14px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: none;
+        transition: background var(--transition);
+    }
+
+    .btn-primary {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--color-primary-hover);
+    }
+
+    .btn-secondary {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+        background: var(--color-border);
+    }
+</style>
+```
+
+### `src/lib/components/sidebar.svelte` (modified — mobile overlay support)
+
+```clubatime/src/lib/components/sidebar.svelte#L1-170
+<script lang="ts">
+    import { page } from "$app/state";
+    import { getSession } from "$lib/auth.remote";
+    import { mobileNav } from "$lib/stores/mobile-nav.svelte";
+
+    function isActive(path: string): boolean {
+        if (path === "/") {
+            return page.url.pathname === "/";
+        }
+        return page.url.pathname.startsWith(path);
+    }
+
+    function closeMobile() {
+        mobileNav.open = false;
+    }
+</script>
+
+<aside class="sidebar" class:open={mobileNav.open}>
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <span class="nav-label">Menu</span>
+            <a href="/" class="nav-link" class:active={isActive("/")} onclick={closeMobile}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Home
+            </a>
+            <a href="/hours" class="nav-link" class:active={isActive("/hours")} onclick={closeMobile}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                My Hours
+            </a>
+            <a href="/submit" class="nav-link" class:active={isActive("/submit")} onclick={closeMobile}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="18" x2="12" y2="12" />
+                    <line x1="9" y1="15" x2="15" y2="15" />
+                </svg>
+                Submit Project
+            </a>
+            <a href="/rewards" class="nav-link" class:active={isActive("/rewards")} onclick={closeMobile}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="7" />
+                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                </svg>
+                Rewards
+            </a>
+        </div>
+
+        {#await getSession() then session}
+            {#if session?.user}
+                <div class="nav-section">
+                    <span class="nav-label">Club</span>
+                    <a href="/club" class="nav-link" class:active={isActive("/club")} onclick={closeMobile}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        My Club
+                    </a>
+                    <a href="/admin" class="nav-link" class:active={isActive("/admin")} onclick={closeMobile}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                        </svg>
+                        Admin
+                    </a>
+                </div>
+            {/if}
+        {/await}
+    </nav>
+</aside>
+
+<style>
+    .sidebar {
+        position: fixed;
+        top: var(--navbar-height);
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--color-bg-secondary);
+        border-right: 1px solid var(--color-border);
+        padding: 16px 0;
+        overflow-y: auto;
+        z-index: 90;
+        transition: transform 200ms ease;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+    }
+
+    .nav-section {
+        padding: 0 12px;
+        margin-bottom: 16px;
+    }
+
+    .nav-label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        padding: 8px 12px 4px;
+        letter-spacing: 0.05em;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: var(--radius);
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition:
+            background var(--transition),
+            color var(--transition);
+    }
+
+    .nav-link:hover {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text);
+        text-decoration: none;
+    }
+
+    .nav-link.active {
+        background: var(--color-bg-tertiary);
+        color: var(--color-primary);
+        font-weight: 500;
+    }
+</style>
+```
+
+---
+
+## 8 — Pages
+
+### `src/routes/submit/+page.svelte` (new)
+
+```clubatime/src/routes/submit/+page.svelte#L1-171
+<script lang="ts">
+    import { getSubmitPageData, submitProject } from "$lib/submissions.remote";
+    import { getSession } from "$lib/auth.remote";
+
+    const session = await getSession();
+    const data = await getSubmitPageData();
+</script>
+
+<div class="page">
+    <header class="page-header">
+        <h1>Submit a Project</h1>
+        <p class="subtitle">Ship something, earn hours</p>
+    </header>
+
+    {#if !session?.user}
+        <div class="card">
+            <p>You need to sign in before you can submit a project.</p>
+        </div>
+    {:else}
+        <form {...submitProject} enctype="multipart/form-data" class="submit-form">
+            <div class="field">
+                <label for="projectName">Project Name</label>
+                <input
+                    type="text"
+                    id="projectName"
+                    name="projectName"
+                    required
+                    minlength="2"
+                    maxlength="200"
+                    placeholder="My Awesome Project"
+                />
+            </div>
+
+            <div class="field">
+                <label for="description">Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    required
+                    minlength="10"
+                    maxlength="5000"
+                    rows="5"
+                    placeholder="What did you build? How does it work?"
+                ></textarea>
+            </div>
+
+            <div class="field">
+                <label for="repoUrl">Repository URL</label>
+                <input
+                    type="url"
+                    id="repoUrl"
+                    name="repoUrl"
+                    required
+                    placeholder="https://github.com/you/project"
+                />
+            </div>
+
+            <div class="field">
+                <label for="demoUrl">Demo URL <span class="optional">(optional)</span></label>
+                <input
+                    type="url"
+                    id="demoUrl"
+                    name="demoUrl"
+                    placeholder="https://myproject.vercel.app"
+                />
+            </div>
+
+            <div class="field">
+                <label for="hoursRequested">Hours Requested</label>
+                <input
+                    type="number"
+                    id="hoursRequested"
+                    name="hoursRequested"
+                    required
+                    min="1"
+                    max="1000"
+                    placeholder="10"
+                />
+                <span class="hint">How many hours did you spend on this project?</span>
+            </div>
+
+            <div class="field">
+                <label for="screenshots">Screenshots <span class="optional">(optional)</span></label>
+                <input
+                    type="file"
+                    id="screenshots"
+                    name="screenshots"
+                    accept="image/*"
+                    multiple
+                />
+                <span class="hint">Upload images showing your project in action</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">Submit Project</button>
+        </form>
+    {/if}
+</div>
+
+<style>
+    .page {
+        max-width: 640px;
+    }
+
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 4px;
+    }
+
+    .subtitle {
+        color: var(--color-text-muted);
+        font-size: 0.95rem;
+    }
+
+    .card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 20px;
+    }
+
+    .submit-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .field label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--color-text);
+    }
+
+    .optional {
+        font-weight: 400;
+        color: var(--color-text-muted);
+    }
+
+    .hint {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+    }
+
+    .field input,
+    .field textarea {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        color: var(--color-text);
+        font-family: inherit;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 2px rgba(236, 55, 80, 0.15);
+    }
+
+    .btn {
+        padding: 8px 14px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: none;
+        transition: background var(--transition);
+        cursor: pointer;
+    }
+
+    .btn-lg {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--color-primary-hover);
+    }
+</style>
+```
+
+### `src/routes/hours/+page.svelte` (rewritten)
+
+```clubatime/src/routes/hours/+page.svelte#L1-160
+<script lang="ts">
+    import { page } from "$app/state";
+    import { getSession } from "$lib/auth.remote";
+    import { getSubmitPageData } from "$lib/submissions.remote";
+
+    const session = await getSession();
+    const data = await getSubmitPageData();
+    const justSubmitted = page.url.searchParams.get("submitted") === "true";
+</script>
+
+<div class="page">
+    <header class="page-header">
+        <h1>My Hours</h1>
+        <p class="subtitle">Track your submitted projects and earned hours</p>
+    </header>
+
+    {#if !session?.user}
+        <div class="card">
+            <p>Sign in to view your hours.</p>
+        </div>
+    {:else if !data}
+        <div class="card">
+            <p>Loading your data&hellip;</p>
+        </div>
+    {:else}
+        {#if justSubmitted}
+            <div class="banner banner-success">
+                Your project has been submitted for review!
+            </div>
+        {/if}
+
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-value">{data.totalHours}</span>
+                <span class="stat-label">Hours Earned</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{data.submissions.length}</span>
+                <span class="stat-label">Projects Submitted</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{data.submissions.filter((s) => s.status === "pending").length}</span>
+                <span class="stat-label">Pending Review</span>
+            </div>
+        </div>
+
+        {#if data.submissions.length === 0}
+            <div class="card empty-state">
+                <p>You haven't submitted any projects yet.</p>
+                <a href="/submit" class="btn btn-primary">Submit Your First Project</a>
+            </div>
+        {:else}
+            <div class="submissions-list">
+                {#each data.submissions as sub}
+                    <div class="submission-card">
+                        <div class="submission-header">
+                            <h3>{sub.projectName}</h3>
+                            <span class="badge badge-{sub.status}">{sub.status.replace("_", " ")}</span>
+                        </div>
+                        <p class="submission-desc">{sub.description}</p>
+                        <div class="submission-meta">
+                            <span>Requested: {sub.hoursRequested}h</span>
+                            {#if sub.hoursAwarded != null}
+                                <span>Awarded: {sub.hoursAwarded}h</span>
+                            {/if}
+                            <span>Submitted: {new Date(sub.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        {#if sub.reviewerNotes}
+                            <div class="reviewer-notes">
+                                <strong>Reviewer notes:</strong> {sub.reviewerNotes}
+                            </div>
+                        {/if}
+                    </div>
+                {/each}
+            </div>
+        {/if}
+    {/if}
+</div>
+
+<style>
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 4px;
+    }
+
+    .subtitle {
+        color: var(--color-text-muted);
+        font-size: 0.95rem;
+    }
+
+    .banner {
+        padding: 12px 16px;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+    .banner-success {
+        background: rgba(51, 214, 166, 0.1);
+        border: 1px solid var(--hc-green);
+        color: var(--hc-green);
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 20px;
+    }
+
+    .empty-state {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .submissions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .submission-card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 16px;
+    }
+
+    .submission-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .submission-header h3 {
+        font-size: 1rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 2px 10px;
+        border-radius: 999px;
+        text-transform: capitalize;
+        font-weight: 500;
+    }
+
+    .badge-pending { background: rgba(241, 196, 15, 0.15); color: var(--hc-yellow); }
+    .badge-approved { background: rgba(51, 214, 166, 0.15); color: var(--hc-green); }
+    .badge-rejected { background: rgba(236, 55, 80, 0.15); color: var(--hc-red); }
+    .badge-revision_requested { background: rgba(255, 140, 55, 0.15); color: var(--hc-orange); }
+
+    .submission-desc {
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+
+    .submission-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+    }
+
+    .reviewer-notes {
+        margin-top: 10px;
+        padding: 10px;
+        background: var(--color-bg-tertiary);
+        border-radius: var(--radius);
+        font-size: 0.85rem;
+    }
+
+    .btn {
+        padding: 8px 14px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background var(--transition);
+    }
+
+    .btn-primary {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--color-primary-hover);
+    }
+</style>
+```
+
+### `src/routes/admin/+page.svelte` (new)
+
+```clubatime/src/routes/admin/+page.svelte#L1-170
+<script lang="ts">
+    import { getSession } from "$lib/auth.remote";
+    import { getAdminData, reviewProject } from "$lib/admin.remote";
+
+    const session = await getSession();
+    const data = await getAdminData();
+</script>
+
+<div class="page">
+    <header class="page-header">
+        <h1>Admin Review Dashboard</h1>
+        <p class="subtitle">Review and manage project submissions</p>
+    </header>
+
+    {#if !session?.user}
+        <div class="card">
+            <p>Sign in to access the admin dashboard.</p>
+        </div>
+    {:else if !data}
+        <div class="card">
+            <p>You don't have admin access.</p>
+        </div>
+    {:else}
+        <h2 class="section-title">Pending Review ({data.pending.length})</h2>
+
+        {#if data.pending.length === 0}
+            <div class="card">
+                <p>No submissions pending review. 🎉</p>
+            </div>
+        {:else}
+            <div class="submissions-list">
+                {#each data.pending as sub}
+                    <div class="submission-card">
+                        <div class="submission-header">
+                            <h3>{sub.projectName}</h3>
+                            <span class="badge badge-pending">pending</span>
+                        </div>
+                        <p class="submission-desc">{sub.description}</p>
+                        <div class="submission-meta">
+                            <span>Hours requested: {sub.hoursRequested}</span>
+                            <span>Repo: <a href={sub.repoUrl} target="_blank" rel="noopener">{sub.repoUrl}</a></span>
+                            {#if sub.demoUrl}
+                                <span>Demo: <a href={sub.demoUrl} target="_blank" rel="noopener">{sub.demoUrl}</a></span>
+                            {/if}
+                        </div>
+
+                        <form {...reviewProject} class="review-form">
+                            <input type="hidden" name="submissionId" value={sub.id} />
+                            <div class="review-fields">
+                                <div class="field">
+                                    <label for="hours-{sub.id}">Hours to Award</label>
+                                    <input
+                                        type="number"
+                                        id="hours-{sub.id}"
+                                        name="hoursAwarded"
+                                        min="0"
+                                        max="1000"
+                                        value={sub.hoursRequested}
+                                    />
+                                </div>
+                                <div class="field">
+                                    <label for="notes-{sub.id}">Reviewer Notes</label>
+                                    <textarea
+                                        id="notes-{sub.id}"
+                                        name="reviewerNotes"
+                                        rows="2"
+                                        placeholder="Optional notes for the submitter"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <div class="review-actions">
+                                <button type="submit" name="status" value="approved" class="btn btn-approve">
+                                    Approve
+                                </button>
+                                <button type="submit" name="status" value="revision_requested" class="btn btn-revision">
+                                    Request Revision
+                                </button>
+                                <button type="submit" name="status" value="rejected" class="btn btn-reject">
+                                    Reject
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                {/each}
+            </div>
+        {/if}
+
+        <h2 class="section-title" style="margin-top: 32px;">All Submissions ({data.all.length})</h2>
+        <div class="submissions-list">
+            {#each data.all as sub}
+                <div class="submission-card compact">
+                    <span class="sub-name">{sub.projectName}</span>
+                    <span class="badge badge-{sub.status}">{sub.status.replace("_", " ")}</span>
+                    <span class="sub-hours">{sub.hoursAwarded ?? sub.hoursRequested}h</span>
+                    <span class="sub-date">{new Date(sub.createdAt).toLocaleDateString()}</span>
+                </div>
+            {/each}
+        </div>
+    {/if}
+</div>
+
+<style>
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .subtitle { color: var(--color-text-muted); font-size: 0.95rem; }
+    .section-title { font-size: 1.1rem; margin-bottom: 12px; }
+
+    .card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 20px;
+    }
+
+    .submissions-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .submission-card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 16px;
+    }
+
+    .submission-card.compact {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .sub-name { flex: 1; font-weight: 500; }
+    .sub-hours, .sub-date { font-size: 0.8rem; color: var(--color-text-muted); }
+
+    .submission-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .submission-header h3 { font-size: 1rem; }
+    .submission-desc { color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 10px; }
+    .submission-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 16px; }
+
+    .badge { font-size: 0.75rem; padding: 2px 10px; border-radius: 999px; text-transform: capitalize; font-weight: 500; }
+    .badge-pending { background: rgba(241, 196, 15, 0.15); color: var(--hc-yellow); }
+    .badge-approved { background: rgba(51, 214, 166, 0.15); color: var(--hc-green); }
+    .badge-rejected { background: rgba(236, 55, 80, 0.15); color: var(--hc-red); }
+    .badge-revision_requested { background: rgba(255, 140, 55, 0.15); color: var(--hc-orange); }
+
+    .review-form { border-top: 1px solid var(--color-border); padding-top: 12px; }
+    .review-fields { display: flex; gap: 12px; margin-bottom: 12px; }
+    .review-fields .field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .review-fields label { font-size: 0.8rem; font-weight: 500; }
+    .review-fields input, .review-fields textarea {
+        background: var(--color-bg-tertiary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        color: var(--color-text);
+        font-family: inherit;
+    }
+
+    .review-actions { display: flex; gap: 8px; }
+
+    .btn {
+        padding: 8px 14px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.85rem;
+        border: none;
+        cursor: pointer;
+        transition: background var(--transition);
+    }
+
+    .btn-approve { background: rgba(51, 214, 166, 0.15); color: var(--hc-green); border: 1px solid var(--hc-green); }
+    .btn-approve:hover { background: rgba(51, 214, 166, 0.25); }
+    .btn-revision { background: rgba(255, 140, 55, 0.15); color: var(--hc-orange); border: 1px solid var(--hc-orange); }
+    .btn-revision:hover { background: rgba(255, 140, 55, 0.25); }
+    .btn-reject { background: rgba(236, 55, 80, 0.15); color: var(--hc-red); border: 1px solid var(--hc-red); }
+    .btn-reject:hover { background: rgba(236, 55, 80, 0.25); }
+
+    @media (max-width: 768px) {
+        .review-fields { flex-direction: column; }
+        .review-actions { flex-direction: column; }
+    }
+</style>
+```
+
+### `src/routes/club/+page.svelte` (new)
+
+```clubatime/src/routes/club/+page.svelte#L1-108
+<script lang="ts">
+    import { getSession } from "$lib/auth.remote";
+    import { getClubData } from "$lib/clubs.remote";
+
+    const session = await getSession();
+    const data = await getClubData();
+</script>
+
+<div class="page">
+    <header class="page-header">
+        <h1>My Club</h1>
+        <p class="subtitle">View your club status and activity</p>
+    </header>
+
+    {#if !session?.user}
+        <div class="card">
+            <p>Sign in to view your club.</p>
+        </div>
+    {:else if !data}
+        <div class="card">
+            <p>Could not load club data.</p>
+        </div>
+    {:else}
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-value">{data.totalHours}</span>
+                <span class="stat-label">Hours Earned</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{data.submissions.length}</span>
+                <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{data.leader ? "Leader" : "Member"}</span>
+                <span class="stat-label">Role</span>
+            </div>
+        </div>
+
+        {#if data.leader}
+            <div class="leader-banner">
+                You are a club leader. You can view member activity below.
+            </div>
+        {/if}
+
+        <h2 class="section-title">Your Submissions</h2>
+        {#if data.submissions.length === 0}
+            <div class="card">
+                <p>No submissions yet. <a href="/submit">Submit your first project!</a></p>
+            </div>
+        {:else}
+            <div class="submissions-list">
+                {#each data.submissions as sub}
+                    <div class="submission-card">
+                        <span class="sub-name">{sub.projectName}</span>
+                        <span class="badge badge-{sub.status}">{sub.status.replace("_", " ")}</span>
+                        <span class="sub-hours">{sub.hoursAwarded ?? sub.hoursRequested}h</span>
+                    </div>
+                {/each}
+            </div>
+        {/if}
+    {/if}
+</div>
+
+<style>
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .subtitle { color: var(--color-text-muted); font-size: 0.95rem; }
+    .section-title { font-size: 1.1rem; margin-bottom: 12px; margin-top: 24px; }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); }
+    .stat-label { font-size: 0.8rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+
+    .leader-banner {
+        padding: 12px 16px;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
+        background: rgba(51, 214, 166, 0.1);
+        border: 1px solid var(--hc-green);
+        color: var(--hc-green);
+        font-size: 0.9rem;
+    }
+
+    .card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 20px;
+    }
+
+    .submissions-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .submission-card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sub-name { flex: 1; font-weight: 500; }
+    .sub-hours { font-size: 0.8rem; color: var(--color-text-muted); }
+
+    .badge { font-size: 0.75rem; padding: 2px 10px; border-radius: 999px; text-transform: capitalize; font-weight: 500; }
+    .badge-pending { background: rgba(241, 196, 15, 0.15); color: var(--hc-yellow); }
+    .badge-approved { background: rgba(51, 214, 166, 0.15); color: var(--hc-green); }
+    .badge-rejected { background: rgba(236, 55, 80, 0.15); color: var(--hc-red); }
+    .badge-revision_requested { background: rgba(255, 140, 55, 0.15); color: var(--hc-orange); }
+</style>
+```
+
+### `src/routes/rewards/+page.svelte` (new)
+
+```clubatime/src/routes/rewards/+page.svelte#L1-97
+<script lang="ts">
+    import { getSession } from "$lib/auth.remote";
+    import { getSubmitPageData } from "$lib/submissions.remote";
+
+    const session = await getSession();
+    const data = await getSubmitPageData();
+
+    // Placeholder rewards — replace with real data from DB/API later
+    const rewards = [
+        { name: "Hack Club Stickers", cost: 5, description: "A pack of Hack Club stickers", emoji: "🎨" },
+        { name: "Hack Club T-Shirt", cost: 25, description: "Official Hack Club tee", emoji: "👕" },
+        { name: "Custom Domain", cost: 10, description: "A .hackclub.com subdomain", emoji: "🌐" },
+        { name: "GitHub Pro", cost: 50, description: "GitHub Pro for a year", emoji: "🐙" },
+    ];
+</script>
+
+<div class="page">
+    <header class="page-header">
+        <h1>Rewards</h1>
+        <p class="subtitle">Spend your earned hours on cool stuff</p>
+    </header>
+
+    {#if session?.user && data}
+        <div class="balance-card">
+            <span class="balance-value">{data.totalHours}</span>
+            <span class="balance-label">Hours Available</span>
+        </div>
+    {/if}
+
+    <div class="rewards-grid">
+        {#each rewards as reward}
+            <div class="reward-card">
+                <span class="reward-emoji">{reward.emoji}</span>
+                <h3>{reward.name}</h3>
+                <p>{reward.description}</p>
+                <div class="reward-footer">
+                    <span class="reward-cost">{reward.cost}h</span>
+                    <button
+                        class="btn btn-primary btn-sm"
+                        disabled={!session?.user || !data || data.totalHours < reward.cost}
+                    >
+                        Redeem
+                    </button>
+                </div>
+            </div>
+        {/each}
+    </div>
+
+    <p class="coming-soon">More rewards coming soon! Earn hours by <a href="/submit">submitting projects</a>.</p>
+</div>
+
+<style>
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .subtitle { color: var(--color-text-muted); font-size: 0.95rem; }
+
+    .balance-card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-primary);
+        border-radius: var(--radius);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .balance-value { font-size: 2.2rem; font-weight: 700; color: var(--color-primary); }
+    .balance-label { font-size: 0.85rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+
+    .rewards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .reward-card {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .reward-emoji { font-size: 2rem; }
+    .reward-card h3 { font-size: 1rem; }
+    .reward-card p { font-size: 0.85rem; color: var(--color-text-muted); flex: 1; }
+
+    .reward-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .reward-cost { font-weight: 600; color: var(--color-primary); }
+
+    .btn {
+        padding: 6px 12px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.85rem;
+        border: none;
+        cursor: pointer;
+        transition: background var(--transition);
+    }
+
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .coming-soon { font-size: 0.9rem; color: var(--color-text-muted); text-align: center; }
+</style>
+```
+
+### `src/routes/+error.svelte` (new)
+
+```clubatime/src/routes/+error.svelte#L1-62
+<script lang="ts">
+    import { page } from "$app/state";
+</script>
+
+<div class="error-page">
+    <div class="error-content">
+        <span class="error-code">{page.status}</span>
+        <h1 class="error-title">
+            {#if page.status === 404}
+                Page Not Found
+            {:else if page.status === 403}
+                Access Denied
+            {:else if page.status === 401}
+                Not Authenticated
+            {:else}
+                Something Went Wrong
+            {/if}
+        </h1>
+        <p class="error-message">
+            {page.error?.message ?? "An unexpected error occurred."}
+        </p>
+        <a href="/" class="btn btn-primary">Go Home</a>
+    </div>
+</div>
+
+<style>
+    .error-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .error-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .error-code {
+        font-size: 4rem;
+        font-weight: 800;
+        color: var(--color-primary);
+        line-height: 1;
+    }
+
+    .error-title {
+        font-size: 1.4rem;
+    }
+
+    .error-message {
+        color: var(--color-text-muted);
+        max-width: 400px;
+    }
+
+    .btn {
+        margin-top: 8px;
+        padding: 10px 20px;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background var(--transition);
+    }
+
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+</style>
+```
+
+---
+
+## 9 — Cleanup: delete the empty Airtable file
+
+Remove `clubatime/src/lib/server/airtable.ts` — it's an empty leftover.
+
+---
+
+## 10 — Steps to finish up
+
+After pasting all the files above:
+
+1. **Install Valibot:**
+   ```/dev/null/shell.sh#L1
+   pnpm add valibot
+   ```
+
+2. **Delete the dead file:**
+   ```/dev/null/shell.sh#L1
+   rm src/lib/server/airtable.ts
+   ```
+
+3. **Generate + run migrations** (this picks up the new `submission` and `clubs_cache` tables, plus the new user columns):
+   ```/dev/null/shell.sh#L1-2
+   pnpm db:generate
+   pnpm db:migrate
+   ```
+
+4. **Update `.env.example`** — make sure it includes:
+   ```/dev/null/.env.example#L1-6
+   DATABASE_URL=
+   BETTER_AUTH_URL=
+   HACKCLUB_CLIENT_ID=
+   HACKCLUB_CLIENT_SECRET=
+   CLUBS_API_KEY=
+   HC_CDN_API_KEY=
+   ```
+
+5. **Set a user as admin** — there's no self-service admin promotion yet. After your first login, manually update your user row:
+   ```/dev/null/sql.sql#L1
+   UPDATE "user" SET role = 'admin' WHERE email = 'you@example.com';
+   ```
+
+6. **Remaining lower-priority items** you can tackle later:
+   - **Tests** — add Vitest test files for the server helpers (`submissions.ts`, `clubs-api.ts`, `hc-cdn.ts`) and Valibot schemas.
+   - **HC CDN endpoint** — I used a placeholder URL (`https://cdn.hackclub.com/api/upload`). You'll want to verify the actual HC CDN API endpoint and response shape, and adjust `hc-cdn.ts` accordingly.
+   - **Clubs API endpoints** — Same deal — verify the actual routes at `https://clubapi.hackclub.com` and adjust `clubs-api.ts`.
+   - **Rewards redemption** — the rewards page is currently static placeholder cards. Wire up a `rewards` table and remote functions when you're ready to make it functional.
+   - **Admin role gating in sidebar** — right now the sidebar shows "Admin" to all logged-in users. You could gate it with `session.user.role === "admin"` once the role field is flowing through the session type.
+
+## User
+
+y remove airtable.ts? we r using airtable as a chache
+
+**Tool Call: thinking**
+Status: Completed
+
+Finished thinking.
+
+## Assistant
+
+Got it — my bad, I misread the thread. Postgres is source of truth but Airtable stays as a cache/mirror layer. I'll leave `airtable.ts` alone.
+
+What's the intended direction for it? Two likely patterns:
+
+1. **Write-through cache** — when a submission is created/updated in Postgres, mirror it to the Airtable YSWS table (`tblqMcid0DexfOXZ5` in base `appTEglMj7iotJOkh`) so HQ can see it there too.
+2. **Read cache** — pull review statuses or other data *from* Airtable back into Postgres periodically.
+3. **Both** — submissions go Postgres → Airtable, review decisions come Airtable → Postgres.
+
+Which of those do you need so I can build out `airtable.ts` with the right functions?
+
+## User
+
+1. anaylayze code and give me the rest of the code i need to put and file names
+
+**Tool Call: Read file `src/lib/server/airtable.ts`**
+Status: Completed
+
+```json
+{
+  "Text": ""
+}
+```
+
+**Tool Call: Read file `src/lib/server/submissions.ts`**
+Status: Failed
+
+clubatime/src/lib/server/submissions.ts not found
+
+**Tool Call: Find paths matching “`clubatime/src/**/*`”**
+Status: Completed
+
+```json
+{
+  "offset": 0,
+  "current_matches_page": [
+    "/home/end/Github/clubatime/src",
+    "/home/end/Github/clubatime/src/app.d.ts",
+    "/home/end/Github/clubatime/src/app.html",
+    "/home/end/Github/clubatime/src/hooks.server.ts",
+    "/home/end/Github/clubatime/src/lib",
+    "/home/end/Github/clubatime/src/lib/assets",
+    "/home/end/Github/clubatime/src/lib/assets/favicon.svg",
+    "/home/end/Github/clubatime/src/lib/assets/flag-standalone.svg",
+    "/home/end/Github/clubatime/src/lib/auth.remote.ts",
+    "/home/end/Github/clubatime/src/lib/components",
+    "/home/end/Github/clubatime/src/lib/components/navbar.svelte",
+    "/home/end/Github/clubatime/src/lib/components/sidebar.svelte",
+    "/home/end/Github/clubatime/src/lib/index.ts",
+    "/home/end/Github/clubatime/src/lib/server",
+    "/home/end/Github/clubatime/src/lib/server/airtable.ts",
+    "/home/end/Github/clubatime/src/lib/server/auth.ts",
+    "/home/end/Github/clubatime/src/lib/server/db",
+    "/home/end/Github/clubatime/src/lib/server/db/index.ts",
+    "/home/end/Github/clubatime/src/lib/server/db/schema",
+    "/home/end/Github/clubatime/src/lib/server/db/schema/auth.ts",
+    "/home/end/Github/clubatime/src/lib/server/db/schema/projects.ts",
+    "/home/end/Github/clubatime/src/lib/styles",
+    "/home/end/Github/clubatime/src/lib/styles/app.css",
+    "/home/end/Github/clubatime/src/routes",
+    "/home/end/Github/clubatime/src/routes/+layout.svelte",
+    "/home/end/Github/clubatime/src/routes/+page.svelte",
+    "/home/end/Github/clubatime/src/routes/hours",
+    "/home/end/Github/clubatime/src/routes/hours/+page.svelte"
+  ],
+  "all_matches_len": 28
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/schema/projects.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { relations } from \"drizzle-orm\";\nimport {\n  index,\n  integer,\n  jsonb,\n  pgTable,\n  text,\n  timestamp,\n} from \"drizzle-orm/pg-core\";\nimport { user } from \"./auth\";\n\nexport const submission = pgTable(\"submission\", {\n  id: text(\"id\")\n    .primaryKey()\n    .$defaultFn(() => crypto.randomUUID()),\n  userId: text(\"user_id\")\n    .notNull()\n    .references(() => user.id, { onDelete: \"cascade\" }),\n});\n"
+}
+```
+
+**Tool Call: Read file `package.json`**
+Status: Completed
+
+```json
+{
+  "Text": "{\n\t\"name\": \"clubatime\",\n\t\"private\": true,\n\t\"version\": \"0.0.1\",\n\t\"type\": \"module\",\n\t\"scripts\": {\n\t\t\"dev\": \"vite dev\",\n\t\t\"build\": \"vite build\",\n\t\t\"preview\": \"vite preview\",\n\t\t\"prepare\": \"svelte-kit sync || echo ''\",\n\t\t\"check\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && biome check\",\n\t\t\"check:watch\": \"svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch\",\n\t\t\"format\": \"biome check --write\",\n\t\t\"db:push\": \"drizzle-kit push\",\n\t\t\"db:generate\": \"drizzle-kit generate\",\n\t\t\"db:migrate\": \"drizzle-kit migrate\",\n\t\t\"db:studio\": \"drizzle-kit studio\",\n\t\t\"storybook\": \"storybook dev -p 6006\",\n\t\t\"build-storybook\": \"storybook build\"\n\t},\n\t\"devDependencies\": {\n\t\t\"@biomejs/biome\": \"2.3.8\",\n\t\t\"@chromatic-com/storybook\": \"^4.1.3\",\n\t\t\"@storybook/addon-a11y\": \"^10.1.7\",\n\t\t\"@storybook/addon-docs\": \"^10.1.7\",\n\t\t\"@storybook/addon-svelte-csf\": \"^5.0.10\",\n\t\t\"@storybook/addon-vitest\": \"^10.1.7\",\n\t\t\"@storybook/sveltekit\": \"^10.1.7\",\n\t\t\"@sveltejs/adapter-auto\": \"^7.0.0\",\n\t\t\"@sveltejs/kit\": \"^2.48.5\",\n\t\t\"@sveltejs/vite-plugin-svelte\": \"^6.2.1\",\n\t\t\"@types/node\": \"^22\",\n\t\t\"@vitest/browser-playwright\": \"^4.0.15\",\n\t\t\"@vitest/coverage-v8\": \"^4.0.15\",\n\t\t\"drizzle-kit\": \"^0.31.7\",\n\t\t\"drizzle-orm\": \"^0.44.7\",\n\t\t\"playwright\": \"^1.57.0\",\n\t\t\"storybook\": \"^10.1.7\",\n\t\t\"svelte\": \"^5.43.8\",\n\t\t\"svelte-check\": \"^4.3.4\",\n\t\t\"typescript\": \"^5.9.3\",\n\t\t\"vite\": \"^7.2.2\",\n\t\t\"vite-plugin-devtools-json\": \"^1.0.0\",\n\t\t\"vitest\": \"^4.0.15\"\n\t},\n\t\"dependencies\": {\n\t\t\"better-auth\": \"^1.4.5\",\n\t\t\"postgres\": \"^3.4.7\",\n\t\t\"valibot\": \"^1.2.0\"\n\t},\n\t\"packageManager\": \"pnpm@10.30.2\"\n}\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/index.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { drizzle } from \"drizzle-orm/postgres-js\";\nimport postgres from \"postgres\";\nimport { env } from \"$env/dynamic/private\";\nimport * as authSchema from \"./schema/auth\";\nimport * as projectsSchema from \"./schema/projects\";\n\nif (!env.DATABASE_URL) throw new Error(\"DATABASE_URL is not set\");\n\nconst client = postgres(env.DATABASE_URL);\n\nexport const db = drizzle(client, {\n\tschema: { ...projectsSchema, ...authSchema },\n});\n"
+}
+```
+
+**Tool Call: Read file `src/app.d.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "// See https://svelte.dev/docs/kit/types#app.d.ts\n\nimport type { ServerSession, ServerUser } from \"$lib/server/auth\";\n\n// for information about these interfaces, see https://svelte.dev/docs/kit/types#app.d.ts\ndeclare global {\n\tnamespace App {\n\t\t// interface Error {}\n\t\tinterface Locals {\n\t\t\tsession?: ServerSession;\n\t\t\tuser?: ServerUser;\n\t\t}\n\t\t// interface PageData {}\n\t\t// interface PageState {}\n\t\t// interface Platform {}\n\t}\n}\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/auth.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { drizzleAdapter } from \"better-auth/adapters/drizzle\";\nimport { betterAuth } from \"better-auth/minimal\";\nimport { genericOAuth } from \"better-auth/plugins\";\nimport { sveltekitCookies } from \"better-auth/svelte-kit\";\nimport { getRequestEvent } from \"$app/server\";\nimport { env } from \"$env/dynamic/private\";\nimport { db } from \"./db\";\n\nexport const auth = betterAuth({\n\tdatabase: drizzleAdapter(db, {\n\t\tprovider: \"pg\",\n\t}),\n\tbaseURL: env.BETTER_AUTH_URL,\n\texperimental: {\n\t\tjoins: true,\n\t},\n\tplugins: [\n\t\tgenericOAuth({\n\t\t\tconfig: [\n\t\t\t\t{\n\t\t\t\t\tproviderId: \"hackclub\",\n\t\t\t\t\tclientId: env.HACKCLUB_CLIENT_ID,\n\t\t\t\t\tclientSecret: env.HACKCLUB_CLIENT_SECRET,\n\t\t\t\t\tdiscoveryUrl:\n\t\t\t\t\t\t\"https://auth.hackclub.com/.well-known/openid-configuration\",\n\t\t\t\t\tscopes: [\"openid\", \"profile\", \"email\", \"name\", \"verification_status\"],\n\t\t\t\t},\n\t\t\t],\n\t\t}),\n\t\tsveltekitCookies(getRequestEvent),\n\t],\n\tsession: {\n\t\tcookieCache: {\n\t\t\tenabled: true,\n\t\t\tmaxAge: 5 * 60, // 5 minutes (maxAge is in seconds)\n\t\t},\n\t},\n});\n\nexport type ServerSession = typeof auth.$Infer.Session.session;\nexport type ServerUser = typeof auth.$Infer.Session.user;\n"
+}
+```
+
+**Tool Call: Read file `src/hooks.server.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import type { Handle } from \"@sveltejs/kit\";\nimport { svelteKitHandler } from \"better-auth/svelte-kit\";\nimport { building } from \"$app/environment\";\nimport { auth } from \"$lib/server/auth\";\n\nexport const handle: Handle = async ({ event, resolve }) => {\n\t// Fetch current session from Better Auth\n\tconst session = await auth.api.getSession({\n\t\theaders: event.request.headers,\n\t});\n\n\t// Make session and user available on server\n\tif (session) {\n\t\tevent.locals.session = session.session;\n\t\tevent.locals.user = session.user;\n\t}\n\n\treturn svelteKitHandler({ event, resolve, auth, building });\n};\n"
+}
+```
+
+**Tool Call: Read file `src/lib/server/db/schema/auth.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { relations } from \"drizzle-orm\";\nimport { boolean, index, pgTable, text, timestamp } from \"drizzle-orm/pg-core\";\n\nexport const user = pgTable(\n\t\"user\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\tname: text(\"name\").notNull(),\n\t\temail: text(\"email\").notNull().unique(),\n\t\temailVerified: boolean(\"email_verified\").default(false).notNull(),\n\t\timage: text(\"image\"),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.defaultNow()\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"user_email_idx\").on(table.email)],\n);\n\nexport const session = pgTable(\n\t\"session\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\texpiresAt: timestamp(\"expires_at\").notNull(),\n\t\ttoken: text(\"token\").notNull().unique(),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t\tipAddress: text(\"ip_address\"),\n\t\tuserAgent: text(\"user_agent\"),\n\t\tuserId: text(\"user_id\")\n\t\t\t.notNull()\n\t\t\t.references(() => user.id, { onDelete: \"cascade\" }),\n\t},\n\t(table) => [\n\t\tindex(\"session_userId_idx\").on(table.userId),\n\t\tindex(\"session_token_idx\").on(table.token),\n\t],\n);\n\nexport const account = pgTable(\n\t\"account\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\taccountId: text(\"account_id\").notNull(),\n\t\tproviderId: text(\"provider_id\").notNull(),\n\t\tuserId: text(\"user_id\")\n\t\t\t.notNull()\n\t\t\t.references(() => user.id, { onDelete: \"cascade\" }),\n\t\taccessToken: text(\"access_token\"),\n\t\trefreshToken: text(\"refresh_token\"),\n\t\tidToken: text(\"id_token\"),\n\t\taccessTokenExpiresAt: timestamp(\"access_token_expires_at\"),\n\t\trefreshTokenExpiresAt: timestamp(\"refresh_token_expires_at\"),\n\t\tscope: text(\"scope\"),\n\t\tpassword: text(\"password\"),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"account_userId_idx\").on(table.userId)],\n);\n\nexport const verification = pgTable(\n\t\"verification\",\n\t{\n\t\tid: text(\"id\").primaryKey(),\n\t\tidentifier: text(\"identifier\").notNull(),\n\t\tvalue: text(\"value\").notNull(),\n\t\texpiresAt: timestamp(\"expires_at\").notNull(),\n\t\tcreatedAt: timestamp(\"created_at\").defaultNow().notNull(),\n\t\tupdatedAt: timestamp(\"updated_at\")\n\t\t\t.defaultNow()\n\t\t\t.$onUpdate(() => /* @__PURE__ */ new Date())\n\t\t\t.notNull(),\n\t},\n\t(table) => [index(\"verification_identifier_idx\").on(table.identifier)],\n);\n\nexport const userRelations = relations(user, ({ many }) => ({\n\tsessions: many(session),\n\taccounts: many(account),\n}));\n\nexport const sessionRelations = relations(session, ({ one }) => ({\n\tuser: one(user, {\n\t\tfields: [session.userId],\n\t\treferences: [user.id],\n\t}),\n}));\n\nexport const accountRelations = relations(account, ({ one }) => ({\n\tuser: one(user, {\n\t\tfields: [account.userId],\n\t\treferences: [user.id],\n\t}),\n}));\n"
+}
+```
+
+**Tool Call: Read file `src/lib/auth.remote.ts`**
+Status: Completed
+
+```json
+{
+  "Text": "import { redirect } from \"@sveltejs/kit\";\nimport { form, getRequestEvent, query } from \"$app/server\";\nimport { auth } from \"./server/auth\";\n\nexport const getSession = query(\n\tasync () =>\n\t\tawait auth.api.getSession({\n\t\t\theaders: getRequestEvent().request.headers,\n\t\t}),\n);\n\nexport const signIn = form(async () => {\n\tconst data = await auth.api.signInWithOAuth2({\n\t\tbody: {\n\t\t\tproviderId: \"hackclub\",\n\t\t\tcallbackURL: \"/\",\n\t\t\terrorCallbackURL: \"/error-page\",\n\t\t},\n\t\theaders: getRequestEvent().request.headers,\n\t});\n\n\tif (data.redirect) {\n\t\tredirect(303, data.url);\n\t}\n\n\tawait getSession().refresh();\n});\n\nexport const signOut = form(async () => {\n\tconst { success } = await auth.api.signOut({\n\t\theaders: getRequestEvent().request.headers,\n\t});\n\n\tif (success) {\n\t\tgetSession().set(null);\n\t}\n});\n"
+}
+```
+
+## Assistant
+
+Now let me read the remaining files to see the full current state:
+
+**Tool Call: Read file `src/routes/hours/+page.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { getSession } from \"$lib/auth.remote\";\n\n    const session = await getSession();\n</script>\n\n<div class=\"page\">\n    <h1>My Hours</h1>\n    {#if session?.user}\n        <p>\n            No submissions yet. <a href=\"/submit\">Submit a project</a> to start tracking\n            hours.\n        </p>\n    {:else}\n        <p>Sign in to view your hours.</p>\n    {/if}\n</div>\n"
+}
+```
+
+**Tool Call: Read file `src/routes/+layout.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import \"$lib/styles/app.css\";\n    import Navbar from \"$lib/components/navbar.svelte\";\n    import Sidebar from \"$lib/components/sidebar.svelte\";\n    import favicon from \"$lib/assets/favicon.svg\";\n\n    const { children } = $props();\n</script>\n\n<svelte:head>\n    <link rel=\"icon\" href={favicon} />\n    <title>Clubatime</title>\n</svelte:head>\n\n<div class=\"app-layout\">\n    <Navbar />\n    <Sidebar />\n    <main class=\"app-main\">\n        <div class=\"app-content\">\n            {@render children()}\n        </div>\n    </main>\n</div>\n\n<style>\n    .app-layout {\n        display: flex;\n        flex-direction: column;\n        min-height: 100vh;\n    }\n\n    .app-body {\n        display: flex;\n        flex: 1;\n        padding-top: var(--navbar-height);\n    }\n\n    .app-main {\n        display: flex;\n        flex-direction: column;\n        min-height: 100vh;\n    }\n\n    .app-content {\n        flex: 1;\n        padding: 24px;\n        margin-left: var(--navbar-height);\n        max-width: 1000px;\n    }\n\n    @media (max-width: 768px) {\n        .app-content {\n            margin-left: 0;\n            padding: 16px;\n        }\n\n        .app-content {\n            padding: 16px;\n        }\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/components/sidebar.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { page } from \"$app/state\";\n    import { getSession } from \"$lib/auth.remote\";\n\n    function isActive(path: string): boolean {\n        if (path === \"/\") {\n            return page.url.pathname === \"/\";\n        }\n        return page.url.pathname.startsWith(path);\n    }\n</script>\n\n<aside class=\"sidebar\">\n    <nav class=\"sidebar-nav\">\n        <div class=\"nav-section\">\n            <span class=\"nav-label\">Menu</span>\n            <a href=\"/\" class=\"nav-link\" class:active={isActive(\"/\")}>\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />\n                    <polyline points=\"9 22 9 12 15 12 15 22\" />\n                </svg>\n                Home\n            </a>\n            <a href=\"/hours\" class=\"nav-link\" class:active={isActive(\"/hours\")}>\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <circle cx=\"12\" cy=\"12\" r=\"10\" />\n                    <polyline points=\"12 6 12 12 16 14\" />\n                </svg>\n                My Hours\n            </a>\n            <a\n                href=\"/submit\"\n                class=\"nav-link\"\n                class:active={isActive(\"/submit\")}\n            >\n                <svg\n                    width=\"18\"\n                    height=\"18\"\n                    viewBox=\"0 0 24 24\"\n                    fill=\"none\"\n                    stroke=\"currentColor\"\n                    stroke-width=\"2\"\n                >\n                    <path\n                        d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"\n                    />\n                    <polyline points=\"14 2 14 8 20 8\" />\n                    <line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"12\" />\n                    <line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\" />\n                </svg>\n                Submit Project\n            </a>\n        </div>\n\n        {#await getSession() then session}\n            {#if session?.user}\n                <div class=\"nav-section\">\n                    <span class=\"nav-label\">Club</span>\n                    <a\n                        href=\"/club\"\n                        class=\"nav-link\"\n                        class:active={isActive(\"/club\")}\n                    >\n                        <svg\n                            width=\"18\"\n                            height=\"18\"\n                            viewBox=\"0 0 24 24\"\n                            fill=\"none\"\n                            stroke=\"currentColor\"\n                            stroke-width=\"2\"\n                        >\n                            <path\n                                d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"\n                            />\n                            <circle cx=\"9\" cy=\"7\" r=\"4\" />\n                            <path d=\"M23 21v-2a4 4 0 0 0-3-3.87\" />\n                            <path d=\"M16 3.13a4 4 0 0 1 0 7.75\" />\n                        </svg>\n                        My Club\n                    </a>\n                    <a\n                        href=\"/admin\"\n                        class=\"nav-link\"\n                        class:active={isActive(\"/admin\")}\n                    >\n                        <svg\n                            width=\"18\"\n                            height=\"18\"\n                            viewBox=\"0 0 24 24\"\n                            fill=\"none\"\n                            stroke=\"currentColor\"\n                            stroke-width=\"2\"\n                        >\n                            <circle cx=\"12\" cy=\"12\" r=\"3\" />\n                            <path\n                                d=\"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z\"\n                            />\n                        </svg>\n                        Admin\n                    </a>\n                </div>\n            {/if}\n        {/await}\n    </nav>\n</aside>\n\n<style>\n    .sidebar {\n        position: fixed;\n        top: var(--navbar-height);\n        left: 0;\n        bottom: 0;\n        width: var(--sidebar-width);\n        background: var(--color-bg-secondary);\n        border-right: 1px solid var(--color-border);\n        padding: 16px 0;\n        overflow-y: auto;\n        z-index: 90;\n    }\n\n    @media (max-width: 768px) {\n        .sidebar {\n            display: none;\n        }\n    }\n\n    .nav-section {\n        padding: 0 12px;\n        margin-bottom: 16px;\n    }\n\n    .nav-label {\n        display: block;\n        font-size: 0.7rem;\n        text-transform: uppercase;\n        color: var(--color-text-muted);\n        padding: 8px 12px 4px;\n        letter-spacing: 0.05em;\n    }\n\n    .nav-link {\n        display: flex;\n        align-items: center;\n        gap: 10px;\n        padding: 8px 12px;\n        border-radius: var(--radius);\n        color: var(--color-text-muted);\n        text-decoration: none;\n        font-size: 0.9rem;\n        transition:\n            background var(--transition),\n            color var(--transition);\n    }\n\n    .nav-link:hover {\n        background: var(--color-bg-tertiary);\n        color: var(--color-text);\n        text-decoration: none;\n    }\n\n    .nav-link.active {\n        background: var(--color-bg-tertiary);\n        color: var(--color-primary);\n        font-weight: 500;\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/lib/styles/app.css`**
+Status: Completed
+
+```json
+{
+  "Text": ":root {\n    --hc-red: #ec3750;\n    --hc-orange: #ff8c37;\n    --hc-yellow: #f1c40f;\n    --hc-green: #33d6a6;\n    --hc-cyan: #5bc0de;\n    --hc-blue: #338eda;\n    --hc-purple: #a633d6;\n    --hc-muted: #8492a6; /* for disabled/muted text/states */\n\n    --sidebar-width: 220px;\n    --navbar-height: 52px;\n    --radius: 4px;\n    --transition: 120ms ease;\n\n    /* dark mode themeing */\n    --color-bg: #17171d;\n    --color-bg-secondary: #1f1f28;\n    --color-bg-tertiary: #252530;\n    --color-border: #33333d;\n    --color-text: #e1e4e8;\n    --color-text-muted: #8492a6;\n\n    --color-primary: var(--hc-red);\n    --color-primary-hover: #d63045;\n    --color-success: var(--hc-green);\n    --color-warning: var(--hc-yellow);\n    --color-error: var(--hc-red);\n\n    color-scheme: dark;\n}\n\n@media (prefers-color-scheme: light) {\n    :root {\n        --color-bg: #ffffff;\n        --color-bg-secondary: #f9fafb;\n        --color-bg-tertiary: #f1f3f5;\n        --color-border: #e1e4e8;\n        --color-text: #1f2d3d;\n        --color-text-muted: #8492a6;\n\n        color-scheme: light;\n    }\n}\n\n[data-theme=\"dark\"] {\n    --color-bg: #17171d;\n    --color-bg-secondary: #1f1f28;\n    --color-bg-tertiary: #252530;\n    --color-border: #33333d;\n    --color-text: #e1e4e8;\n    --color-text-secondary: #c6cbd1;\n    --color-text-muted: #8492a6;\n    color-scheme: dark;\n}\n\n[data-theme=\"light\"] {\n    --color-bg: #ffffff;\n    --color-bg-secondary: #f9fafb;\n    --color-bg-tertiary: #f1f3f5;\n    --color-border: #e1e4e8;\n    --color-text: #1f2d3d;\n    --color-text-secondary: #8492a6;\n    --color-text-muted: #8492a6;\n    color-scheme: light;\n}\n\n*,\n*::before,\n*::after {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n}\n\nhtml,\nbody {\n    height: 100%;\n    font-family:\n        \"monospace\",\n        system-ui,\n        -apple-system,\n        BlinkMacSystemFont,\n        \"Segoe UI\",\n        Roboto,\n        Oxygen,\n        Ubuntu,\n        Cantarell,\n        \"Open Sans\",\n        \"Helvetica Neue\",\n        sans-serif;\n    background-color: var(--color-bg);\n    color: var(--color-text);\n    line-height: 1.5;\n    -webkit-font-smoothing: antialiased;\n}\n\na {\n    color: var(--color-primary);\n    text-decoration: none;\n}\n\na:hover {\n    text-decoration: underline;\n}\n\nbutton {\n    font-family: inherit;\n    font-size: inherit;\n    cursor: pointer;\n}\n\n.visually-hidden {\n    position: absolute;\n    width: 1px;\n    height: 1px;\n    padding: 0;\n    margin: -1px;\n    overflow: hidden;\n    clip: rect(0, 0, 0, 0);\n    white-space: nowrap;\n    border-width: 0;\n}\n"
+}
+```
+
+**Tool Call: Read file `src/lib/components/navbar.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { getSession, signIn, signOut } from \"$lib/auth.remote\";\n    import logo from \"$lib/assets/flag-standalone.svg\";\n\n    const session = await getSession();\n</script>\n\n<nav>\n    <a href=\"/\" class=\"brand\">\n        <img\n            src={logo}\n            alt=\"A red flag with a brown base, and the words &quot;Hack Club&quot; in white inside the flag\"\n            class=\"logo\"\n        />\n        <span class=\"brand-text\">Clubatime</span>\n    </a>\n\n    <div class=\"user-area\">\n        {#if session?.user}\n            <span class=\"username\">{session.user.name}</span>\n            <form {...signOut}>\n                <button type=\"submit\" class=\"btn btn-secondary\">Sign Out</button\n                >\n            </form>\n        {:else}\n            <form {...signIn}>\n                <button type=\"submit\" class=\"btn btn-primary\">\n                    Sign in with Hack Club\n                </button>\n            </form>\n        {/if}\n    </div>\n</nav>\n\n<style>\n    nav {\n        position: fixed;\n        top: 0;\n        left: 0;\n        right: 0;\n        height: var(--navbar-height);\n        background: var(--color-bg-secondary);\n        border-bottom: 1px solid var(--color-border);\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: 0 16px;\n        z-index: 100;\n    }\n\n    .brand {\n        display: flex;\n        align-items: center;\n        gap: 10px;\n        color: var(--color-text);\n        text-decoration: none;\n    }\n\n    .brand:hover {\n        text-decoration: none;\n    }\n\n    .logo {\n        height: 28px;\n        width: auto;\n    }\n\n    .brand-text {\n        font-weight: 600;\n        font-size: 1.1rem;\n    }\n\n    .user-area {\n        display: flex;\n        align-items: center;\n        gap: 12px;\n    }\n\n    .username {\n        color: var(--color-text-muted);\n        font-size: 0.9rem;\n    }\n\n    .btn {\n        padding: 8px 14px;\n        border-radius: var(--radius);\n        font-weight: 500;\n        font-size: 0.9rem;\n        border: none;\n        transition: background var(--transition);\n    }\n\n    .btn-primary {\n        background: var(--color-primary);\n        color: white;\n    }\n\n    .btn-primary:hover {\n        background: var(--color-primary-hover);\n    }\n\n    .btn-secondary {\n        background: var(--color-bg-tertiary);\n        color: var(--color-text);\n        border: 1px solid var(--color-border);\n    }\n\n    .btn-secondary:hover {\n        background: var(--color-border);\n    }\n</style>\n"
+}
+```
+
+**Tool Call: Read file `src/routes/+page.svelte`**
+Status: Completed
+
+```json
+{
+  "Text": "<script lang=\"ts\">\n    import { getSession } from \"$lib/auth.remote\";\n\n    const session = await getSession();\n</script>\n\n<div class=\"page\">\n    <header class=\"page-header\">\n        <h1>Welcome to Clubatime</h1>\n        <p class=\"subtitle\">Track your club hours and earn rewards</p>\n    </header>\n\n    {#if session?.user}\n        <div class=\"card\">\n            <h2>Hey, {session.user.name}!</h2>\n            <p>Successfully signed in and ready to track</p>\n            <div class=\"card-actions\">\n                <a href=\"/submit\" class=\"btn btn-primary\">Submit a Project</a>\n                <a href=\"/hours\" class=\"btn btn-secondary\">View My Hours</a>\n            </div>\n        </div>\n    {:else}\n        <div class=\"card\">\n            <h2>Get Started</h2>\n            <p>Sign in with your Hack Club account</p>\n        </div>\n    {/if}\n</div>\n"
+}
+```
+
+**Tool Call: thinking**
+Status: Failed
+

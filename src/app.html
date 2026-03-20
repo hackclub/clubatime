@@ -6,6 +6,18 @@
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
+		<script>
+			try {
+				const t = localStorage.getItem('theme');
+				if (t && ['orchid','midnight','ember','daylight'].indexOf(t) !== -1) {
+					document.documentElement.dataset.theme = t;
+				} else {
+					document.documentElement.dataset.theme = 'orchid';
+				}
+			} catch(e) {
+				document.documentElement.dataset.theme = 'orchid';
+			}
+		</script>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
